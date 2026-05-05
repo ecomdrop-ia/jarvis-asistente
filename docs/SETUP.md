@@ -1,94 +1,94 @@
-# YARBIS — Detailed Setup Guide
+# YARBIS — Guía detallada de instalación
 
-Step-by-step installation for users who want full control. For the TL;DR, see the main [README](../README.md#-quick-start).
+Setup paso-a-paso para usuarios que quieren control total. Para la versión TL;DR, ve al [README principal](../README.md#-inicio-rápido).
 
-## Table of contents
+## Tabla de contenido
 
-1. [System requirements](#1-system-requirements)
-2. [Prerequisites](#2-prerequisites)
-3. [API keys you need](#3-api-keys-you-need)
-4. [Installation](#4-installation)
-5. [Welcome music (AC/DC)](#5-welcome-music)
-6. [First boot](#6-first-boot)
-7. [Verify everything works](#7-verify-everything-works)
-8. [Optional: Hermes Gateway](#8-optional-hermes-gateway)
-9. [Optional: auto-launch on login](#9-optional-auto-launch-on-login)
-10. [Customization](#10-customization)
+1. [Requisitos del sistema](#1-requisitos-del-sistema)
+2. [Prerrequisitos](#2-prerrequisitos)
+3. [API keys que necesitas](#3-api-keys-que-necesitas)
+4. [Instalación](#4-instalación)
+5. [Música de bienvenida (AC/DC)](#5-música-de-bienvenida)
+6. [Primer arranque](#6-primer-arranque)
+7. [Verificar que todo funciona](#7-verificar-que-todo-funciona)
+8. [Opcional: Hermes Gateway](#8-opcional-hermes-gateway)
+9. [Opcional: auto-arranque al login](#9-opcional-auto-arranque-al-login)
+10. [Personalización](#10-personalización)
 
 ---
 
-## 1. System requirements
+## 1. Requisitos del sistema
 
-- **macOS 13+** (tested on Sonoma & Sequoia, Apple Silicon recommended)
-- **8 GB RAM** minimum, 16 GB recommended
-- **5 GB disk space** (Electron + Hermes + LiveKit + Node modules)
-- **Microphone + speakers** (built-in works fine)
-- **Internet** (for STT/TTS/LLM API calls)
+- **macOS 13+** (probado en Sonoma & Sequoia, Apple Silicon recomendado)
+- **8 GB RAM** mínimo, 16 GB recomendado
+- **5 GB de espacio en disco** (Electron + Hermes + LiveKit + Node modules)
+- **Micrófono + parlantes** (los del Mac sirven perfecto)
+- **Internet** (para llamadas a APIs de STT/TTS/LLM)
 
-> ⚠️ Linux/Windows are not officially supported yet. The voice-bridge is cross-platform Python but the Electron auto-launch + macOS-specific commands (`open`, `osascript`) need adapters.
+> ⚠️ Linux/Windows aún no están soportados oficialmente. El voice-bridge es Python multiplataforma, pero el auto-launch de Electron + comandos específicos de macOS (`open`, `osascript`) necesitan adaptadores.
 
-## 2. Prerequisites
+## 2. Prerrequisitos
 
-Install these once:
+Instala esto una sola vez:
 
 ```bash
 # Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Node 20+ and pnpm
+# Node 20+ y pnpm
 brew install node
 npm install -g pnpm
 
-# yt-dlp (for downloading the welcome music)
+# yt-dlp (para descargar la música de bienvenida)
 brew install yt-dlp ffmpeg
 
-# Verify versions
-node --version  # should be 20+
-pnpm --version  # should be 8+
-python3 --version  # 3.11+ recommended (uv will install if missing)
+# Verifica las versiones
+node --version  # debería ser 20+
+pnpm --version  # debería ser 8+
+python3 --version  # 3.11+ recomendado (uv lo instala si falta)
 ```
 
-## 3. API keys you need
+## 3. API keys que necesitas
 
-YARBIS needs 3 keys to run, plus 1 optional:
+YARBIS requiere 3 keys para funcionar, más 1 opcional:
 
-### Required
+### Requeridas
 
-| Service | Purpose | Free tier | Get key |
+| Servicio | Para qué | Tier gratis | Conseguir key |
 |---|---|---|---|
-| **OpenAI** | Voice conversation brain | $5 free credit on signup | https://platform.openai.com/api-keys |
-| **Deepgram** | Speech-to-text (your voice → text) | ~45,000 minutes free | https://console.deepgram.com/signup |
-| **ElevenLabs** | Text-to-speech (YARBIS's voice) | ~10,000 chars/month free | https://elevenlabs.io/app/settings/api-keys |
+| **OpenAI** | Cerebro de la conversación por voz | $5 de crédito al registrarte | https://platform.openai.com/api-keys |
+| **Deepgram** | Speech-to-text (tu voz → texto) | ~45,000 minutos gratis | https://console.deepgram.com/signup |
+| **ElevenLabs** | Text-to-speech (la voz de YARBIS) | ~10,000 chars/mes gratis | https://elevenlabs.io/app/settings/api-keys |
 
-### Optional
+### Opcionales
 
-| Service | Purpose | Without it… |
+| Servicio | Para qué | Sin esto… |
 |---|---|---|
-| **Brave Search** | Web search via voice | The `search_web` voice command won't work |
-| **Hermes** | Email/calendar/Notion access via voice | The `ask_hermes` voice command won't work; everything else works |
+| **Brave Search** | Búsquedas web por voz | El comando `search_web` no funcionará |
+| **Hermes** | Acceso a email/calendar/Notion por voz | El comando `ask_hermes` no funcionará; todo lo demás sí |
 
-## 4. Installation
+## 4. Instalación
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/<your-username>/yarbis-asistente.git
+# 1. Clona el repo
+git clone https://github.com/<tu-usuario>/yarbis-asistente.git
 cd yarbis-asistente
 
-# 2. Run the master installer
+# 2. Ejecuta el instalador maestro
 bash scripts/install.sh
 ```
 
-What `install.sh` does:
+Lo que hace `install.sh`:
 
-- ✅ Verifies Node, pnpm, Homebrew are installed
-- ✅ Installs **Hermes Agent** (Nous Research) at `~/.hermes/`
-- ✅ Installs **LiveKit Server** via Homebrew
-- ✅ Creates `livekit.yaml` if missing
-- ✅ Sets up the **Python 3.11 venv** at `voice-bridge/.venv` (using Hermes's bundled `uv`)
-- ✅ Installs `livekit-agents` + plugins
-- ✅ Copies the YARBIS personality (`hermes/personality.md`) into Hermes's `SOUL.md`
+- ✅ Verifica que Node, pnpm y Homebrew estén instalados
+- ✅ Instala **Hermes Agent** (Nous Research) en `~/.hermes/`
+- ✅ Instala **LiveKit Server** vía Homebrew
+- ✅ Crea `livekit.yaml` si falta
+- ✅ Configura el **venv de Python 3.11** en `voice-bridge/.venv` (usando el `uv` que viene con Hermes)
+- ✅ Instala `livekit-agents` + plugins
+- ✅ Copia la personalidad de YARBIS (`hermes/personality.md`) al `SOUL.md` de Hermes
 
-After it finishes, you'll see:
+Cuando termina, ves:
 
 ```
 ╔══════════════════════════════════════════════╗
@@ -96,17 +96,17 @@ After it finishes, you'll see:
 ╚══════════════════════════════════════════════╝
 ```
 
-### Configure environment
+### Configura el entorno
 
 ```bash
-# 3. Copy the env template
+# 3. Copia el template de env
 cp .env.example .env
 
-# 4. Open it and paste your API keys
+# 4. Ábrelo y pega tus API keys
 nano .env
 ```
 
-At minimum, fill in:
+Como mínimo, completa:
 
 ```bash
 OPENAI_API_KEY=sk-proj-...
@@ -114,23 +114,23 @@ DEEPGRAM_API_KEY=...
 ELEVENLABS_API_KEY=sk_...
 ```
 
-### Install UI + Electron deps
+### Instala dependencias del UI + Electron
 
 ```bash
-# 5. UI dependencies
+# 5. Dependencias del UI
 cd ui
 pnpm install
 cd ..
 
-# 6. Electron dependencies
+# 6. Dependencias de Electron
 cd electron
 npm install
 cd ..
 ```
 
-## 5. Welcome music
+## 5. Música de bienvenida
 
-The morning ritual (`"Yarbis, buenos días"`) plays **AC/DC's "Shoot to Thrill"** — the same track used in Iron Man 2's workshop scene. We don't ship the audio (copyright). You download it locally:
+El ritual matutino (`"Yarbis, buenos días"`) reproduce **"Shoot to Thrill" de AC/DC** — el mismo track de la escena del taller en Iron Man 2. No incluimos el audio (copyright). Lo descargas localmente:
 
 ```bash
 yt-dlp -x --audio-format mp3 --audio-quality 0 \
@@ -138,49 +138,49 @@ yt-dlp -x --audio-format mp3 --audio-quality 0 \
   "https://www.youtube.com/watch?v=wLoWd2KyUro"
 ```
 
-This is **for personal, non-commercial use only**. If you'd rather use a different song, just save it as `voice-bridge/assets/welcome_shoot_to_thrill.mp3` — the filename is what matters.
+Esto es **solo para uso personal, no comercial**. Si prefieres otra canción, guárdala como `voice-bridge/assets/welcome_shoot_to_thrill.mp3` — lo importante es el nombre del archivo.
 
-> Want to disable the music entirely? Edit `voice-bridge/main.py` and remove the `play_welcome_music(player)` call inside `entrypoint()`.
+> ¿Quieres desactivar la música del todo? Edita `voice-bridge/main.py` y elimina la llamada `play_welcome_music(player)` dentro de `entrypoint()`.
 
-## 6. First boot
+## 6. Primer arranque
 
 ```bash
 bash scripts/dev_all.sh
 ```
 
-This opens 5 terminal panes. The order matters:
+Esto abre 5 paneles de Terminal. El orden importa:
 
-1. **LiveKit Server** boots first (port 7880)
-2. **Hermes Gateway** boots if available (port 8642)
-3. **Voice-bridge worker** registers with LiveKit
-4. **Next.js UI** compiles (~10s on first run)
-5. **Electron** waits for the UI, then opens the JARVIS window
+1. **LiveKit Server** arranca primero (puerto 7880)
+2. **Hermes Gateway** arranca si está disponible (puerto 8642)
+3. **Voice-bridge worker** se registra con LiveKit
+4. **Next.js UI** compila (~10 seg en el primer arranque)
+5. **Electron** espera al UI, luego abre la ventana JARVIS
 
-### macOS will ask for microphone permission
+### macOS te va a pedir permiso del micrófono
 
-When Electron opens the window the first time:
+Cuando se abra la ventana de Electron por primera vez:
 
-> *"Electron would like to access the microphone."*
+> *"Electron quiere acceder al micrófono."*
 
-**Click Allow.** It only asks once. After that, YARBIS just works.
+**Click en Aceptar.** Solo lo pide una vez. Después de eso, YARBIS funciona sin más.
 
-### Expected behavior on first launch
+### Comportamiento esperado en el primer arranque
 
-1. The Electron window opens with the YARBIS HUD
-2. After ~2 seconds, AC/DC starts playing
-3. YARBIS delivers a 15-second stoic welcome speech in Colombian Spanish
-4. The "ESTADO ACTUAL" badge changes to **● ESCUCHANDO**
-5. You can now talk to it
+1. Se abre la ventana de Electron con el HUD de YARBIS
+2. Después de ~2 segundos, arranca AC/DC
+3. YARBIS entrega un saludo estoico de 15 segundos en español colombiano
+4. La placa "ESTADO ACTUAL" cambia a **● ESCUCHANDO**
+5. Ya puedes hablarle
 
-## 7. Verify everything works
+## 7. Verificar que todo funciona
 
-Run the health check:
+Corre el health check:
 
 ```bash
 bash scripts/healthcheck.sh
 ```
 
-You should see:
+Deberías ver:
 
 ```
 ═══════════════════════════════════════════════════════════════
@@ -195,38 +195,38 @@ You should see:
   ✅  Todo OK.
 ```
 
-If any service is missing, check the [TROUBLESHOOTING guide](TROUBLESHOOTING.md).
+Si algún servicio falta, mira la [guía de TROUBLESHOOTING](TROUBLESHOOTING.md).
 
-### Test a voice command
+### Prueba un comando de voz
 
-Say:
+Di:
 
 > *"Yarbis, qué hora es"*
 
-YARBIS should respond with the current time in Colombian Spanish.
+YARBIS debería responder con la hora actual en español colombiano.
 
-If you don't get a reply, see [TROUBLESHOOTING — YARBIS no escucha](TROUBLESHOOTING.md#yarbis-doesnt-hear-me).
+Si no obtienes respuesta, ve a [TROUBLESHOOTING — YARBIS no escucha](TROUBLESHOOTING.md#yarbis-no-escucha).
 
-## 8. Optional: Hermes Gateway
+## 8. Opcional: Hermes Gateway
 
-If you want to use the `ask_hermes` voice command (delegate to Hermes for emails/calendar/Notion/etc.), Hermes is already installed by `install.sh`. Just enable its API server:
+Si quieres usar el comando de voz `ask_hermes` (delegar a Hermes para emails/calendario/Notion/etc.), Hermes ya está instalado por `install.sh`. Solo activa su API server:
 
 ```bash
-# Hermes config is at ~/.hermes/.env — open it
+# La config de Hermes está en ~/.hermes/.env — ábrelo
 nano ~/.hermes/.env
 
-# Make sure these lines are set:
+# Asegúrate de que estas líneas estén configuradas:
 API_SERVER_ENABLED=true
 API_SERVER_HOST=127.0.0.1
 API_SERVER_PORT=8642
 API_SERVER_KEY=yarbis-local-secret
 ```
 
-The `dev_all.sh` script auto-starts Hermes Gateway if it's installed. To configure Hermes itself (set up Gmail, Calendar, etc.), see Hermes's docs: https://hermes-agent.nousresearch.com/docs/
+El script `dev_all.sh` arranca Hermes Gateway automáticamente si está instalado. Para configurar Hermes en sí (Gmail, Calendar, etc.), ve a la doc de Hermes: https://hermes-agent.nousresearch.com/docs/
 
-## 9. Optional: auto-launch on login
+## 9. Opcional: auto-arranque al login
 
-Once the manual flow works for you, automate it:
+Una vez que el flujo manual te funciona, automatízalo:
 
 ```bash
 mkdir -p ~/Library/LaunchAgents ~/Library/Logs/yarbis
@@ -234,48 +234,48 @@ cp scripts/launchd/com.ecomdrop.yarbis.plist ~/Library/LaunchAgents/
 launchctl load ~/Library/LaunchAgents/com.ecomdrop.yarbis.plist
 ```
 
-After this, **YARBIS will auto-start whenever you log into your Mac**. The full stack lives in:
+Después de esto, **YARBIS arrancará automáticamente cada vez que inicies sesión en tu Mac**. El stack completo vive en:
 
 - Logs: `~/Library/Logs/yarbis/{livekit,voice-bridge,ui,electron}.log`
-- Process management: `launchctl list | grep yarbis`
+- Gestión de procesos: `launchctl list | grep yarbis`
 
-To uninstall:
+Para desinstalar:
 
 ```bash
 launchctl unload ~/Library/LaunchAgents/com.ecomdrop.yarbis.plist
 rm ~/Library/LaunchAgents/com.ecomdrop.yarbis.plist
 ```
 
-> ⚠️ The plist contains absolute paths. If you move the project, edit `scripts/launchd/com.ecomdrop.yarbis.plist` to update them and reinstall.
+> ⚠️ El plist tiene rutas absolutas. Si mueves el proyecto, edita `scripts/launchd/com.ecomdrop.yarbis.plist` y reinstala.
 
-## 10. Customization
+## 10. Personalización
 
-### Change YARBIS's name
+### Cambiar el nombre de YARBIS
 
-The voice trigger word "Yarbis" is just a system prompt convention — change it in `voice-bridge/main.py` (search for `YARBIS_INSTRUCTIONS`).
+La palabra de activación "Yarbis" es solo una convención del system prompt — cámbiala en `voice-bridge/main.py` (busca `YARBIS_INSTRUCTIONS`).
 
-### Change the voice
+### Cambiar la voz
 
-The default voice is **Cristian** (Colombian Spanish male). Pick another from [ElevenLabs voice library](https://elevenlabs.io/app/voice-library), copy the voice ID, and update `.env`:
-
-```bash
-ELEVENLABS_VOICE_ID=<new-voice-id>
-```
-
-### Change the LLM model
-
-In `.env`:
+La voz default es **Cristian** (español colombiano masculino). Elige otra del [voice library de ElevenLabs](https://elevenlabs.io/app/voice-library), copia el voice ID, y actualiza `.env`:
 
 ```bash
-HERMES_MODEL=gpt-5-mini   # (default) reasoning, balanced
-# Other options: gpt-4o-mini (fastest, cheapest), gpt-5 (smartest, slowest), o3-mini
+ELEVENLABS_VOICE_ID=<nuevo-voice-id>
 ```
 
-For voice (in `voice-bridge/main.py`), the model is hardcoded at `gpt-4o-mini` for low latency. Change it on the `openai.LLM(model=...)` line if needed.
+### Cambiar el modelo LLM
 
-### Add your own voice command (tool)
+En `.env`:
 
-Open `voice-bridge/tools_advanced.py` and add a new function decorated with `@function_tool()`. Example:
+```bash
+HERMES_MODEL=gpt-5-mini   # (default) razona, balanceado
+# Otras opciones: gpt-4o-mini (más rápido, más barato), gpt-5 (más inteligente, más lento), o3-mini
+```
+
+Para la voz (en `voice-bridge/main.py`), el modelo está hardcoded en `gpt-4o-mini` por baja latencia. Cámbialo en la línea `openai.LLM(model=...)` si lo necesitas.
+
+### Agregar tu propio comando de voz (tool)
+
+Abre `voice-bridge/tools_advanced.py` y agrega una nueva función decorada con `@function_tool()`. Ejemplo:
 
 ```python
 @function_tool()
@@ -286,28 +286,28 @@ async def lock_screen() -> str:
     return "Pantalla bloqueada."
 ```
 
-Then register it in `ADVANCED_TOOLS = [..., lock_screen]`. Save the file. The voice-bridge auto-reloads via `watchfiles`. Done.
+Luego regístrala en `ADVANCED_TOOLS = [..., lock_screen]`. Guarda el archivo. El voice-bridge se auto-recarga vía `watchfiles`. Listo.
 
-### Customize the HUD
+### Personalizar el HUD
 
-The whole HUD is in `ui/src/components/`. The components are:
+Todo el HUD vive en `ui/src/components/`. Los componentes son:
 
-- `HudHeader.tsx` — top bar with time, "BIENVENIDO SEÑOR" wordmark, state badge
-- `HudFrame.tsx` — concentric rotating SVG rings
-- `ArcReactor.tsx` — central focal element (audio-reactive)
-- `AudioOrbit.tsx` — radial bars around the reactor
-- `HudPanels.tsx` — Status panel (left), Quote panel (right), Footer
-- `AiEngine.tsx` — AI telemetry (model, tokens, cost, latency)
-- `BuildActivity.tsx` — project build feed
-- `StackChips.tsx` — tech stack indicators below the header
-- `DevBackground.tsx` — code rain, blueprint marks, ambient layers
-- `CircuitTraces.tsx` — corner PCB traces
+- `HudHeader.tsx` — barra superior con hora, wordmark "BIENVENIDO SEÑOR", placa de estado
+- `HudFrame.tsx` — anillos SVG concéntricos rotantes
+- `ArcReactor.tsx` — elemento focal central (reactivo a audio)
+- `AudioOrbit.tsx` — barras radiales alrededor del reactor
+- `HudPanels.tsx` — Panel de Subsistemas (izquierda), Panel de Frase (derecha), Footer
+- `AiEngine.tsx` — telemetría IA (modelo, tokens, costo, latencia)
+- `BuildActivity.tsx` — feed de builds de proyectos
+- `StackChips.tsx` — chips de stack tecnológico debajo del header
+- `DevBackground.tsx` — code rain, blueprint marks, capas ambient
+- `CircuitTraces.tsx` — trazos de PCB en las esquinas
 
-Design tokens live in `ui/src/app/globals.css`. The font setup is in `ui/src/app/layout.tsx`.
+Los design tokens viven en `ui/src/app/globals.css`. El setup de fuentes está en `ui/src/app/layout.tsx`.
 
-## What's next?
+## ¿Qué sigue?
 
-- See [VOICE_COMMANDS.md](VOICE_COMMANDS.md) for the full command reference
-- See [ARCHITECTURE.md](../ARCHITECTURE.md) for system design
-- See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues
-- See [roadmap.md](roadmap.md) for future features
+- Ve [VOICE_COMMANDS.md](VOICE_COMMANDS.md) para la referencia completa de comandos
+- Ve [ARCHITECTURE.md](../ARCHITECTURE.md) para el diseño del sistema
+- Ve [TROUBLESHOOTING.md](TROUBLESHOOTING.md) para problemas comunes
+- Ve [roadmap.md](roadmap.md) para features futuros

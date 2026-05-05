@@ -1,211 +1,212 @@
-# YARBIS — Project guide for Claude Code
+# YARBIS — Guía del proyecto para Claude Code
 
-This file is loaded automatically when Claude Code opens this project. It tells Claude (or any AI coding agent) what's important about the codebase, the conventions, and how things connect.
+Este archivo se carga automáticamente cuando Claude Code abre este proyecto. Le dice a Claude (o a cualquier AI agent que codee) qué es importante del codebase, las convenciones, y cómo se conectan las cosas.
 
-## What this project is
+## Qué es este proyecto
 
-YARBIS is a **JARVIS-style voice assistant** running locally on a Mac. Three main runtime components:
+YARBIS es un **asistente de voz tipo JARVIS** corriendo localmente en un Mac. Tres componentes principales en runtime:
 
-1. **`voice-bridge/`** — Python LiveKit Agents worker. Handles STT (Deepgram) → LLM (OpenAI gpt-4o-mini) → TTS (ElevenLabs). The voice loop.
-2. **`ui/`** — Next.js 16 + Tailwind v4 + Three.js HUD. Visual state of the assistant.
-3. **`electron/`** — Native shell that loads the Next.js UI in Chromium without browser autoplay restrictions, with mic auto-grant and a local HTTP command server (port 9871) for window control.
+1. **`voice-bridge/`** — Worker Python LiveKit Agents. Maneja STT (Deepgram) → LLM (OpenAI gpt-4o-mini) → TTS (ElevenLabs). El loop de voz.
+2. **`ui/`** — HUD Next.js 16 + Tailwind v4 + Three.js. Estado visual del asistente.
+3. **`electron/`** — Shell nativo que carga el UI Next.js en Chromium sin restricciones de autoplay del browser, con micro auto-grant y un servidor HTTP local de comandos (puerto 9871) para control de ventana.
 
-Optional fourth: **Hermes Agent** (Nous Research) installed at `~/.hermes/`, exposing a Gateway API on port 8642 — used by the `ask_hermes` voice tool to delegate complex tasks (Gmail, Calendar, Notion, etc.).
+Cuarto opcional: **Hermes Agent** (Nous Research) instalado en `~/.hermes/`, exponiendo un Gateway API en puerto 8642 — usado por el voice tool `ask_hermes` para delegar tareas complejas (Gmail, Calendar, Notion, etc.).
 
-## Project layout
+## Layout del proyecto
 
 ```
 yarbis-asistente/
 ├── ui/                            # Next.js 16 (App Router)
 │   └── src/
 │       ├── app/
-│       │   ├── page.tsx           # Mounts <VoiceRoom>
-│       │   ├── layout.tsx         # Fonts: JetBrains Mono, Inter, Orbitron
-│       │   ├── globals.css        # Design tokens (colors, type scale, glow)
-│       │   └── api/token/route.ts # LiveKit JWT generator (server-only)
-│       └── components/            # All HUD pieces (see "UI components" below)
+│       │   ├── page.tsx           # Monta <VoiceRoom>
+│       │   ├── layout.tsx         # Fuentes: JetBrains Mono, Inter, Orbitron
+│       │   ├── globals.css        # Design tokens (colores, escala tipográfica, glow)
+│       │   └── api/token/route.ts # Generador de JWT de LiveKit (server-only)
+│       └── components/            # Todas las piezas del HUD (ver "Componentes del UI" abajo)
 ├── voice-bridge/
-│   ├── main.py                    # Entrypoint, agent setup, system prompt
-│   ├── tools.py                   # Core voice tools + Electron command client
-│   ├── tools_advanced.py          # Web/project/system/Hermes tools
-│   ├── hermes_bridge.py           # (legacy, not used in current flow)
-│   └── assets/                    # Welcome music (gitignored)
+│   ├── main.py                    # Entrypoint, setup del agent, system prompt
+│   ├── tools.py                   # Tools core + cliente del cmd server de Electron
+│   ├── tools_advanced.py          # Tools de web/proyecto/sistema/Hermes
+│   ├── hermes_bridge.py           # (legacy, no usado en el flow actual)
+│   └── assets/                    # Música de bienvenida (gitignored)
 ├── electron/
-│   ├── main.js                    # BrowserWindow + permissions + cmd server
-│   └── preload.js                 # (placeholder — empty)
-├── hermes/                        # Hermes Agent personality + context
-│   ├── personality.md             # Copied to ~/.hermes/SOUL.md by install.sh
+│   ├── main.js                    # BrowserWindow + permisos + cmd server
+│   └── preload.js                 # (placeholder — vacío)
+├── hermes/                        # Personalidad + contexto de Hermes Agent
+│   ├── personality.md             # Copiado a ~/.hermes/SOUL.md por install.sh
 │   └── context.md
 ├── scripts/
-│   ├── dev_all.sh                 # Boots all 5 services (Terminal panes via osascript)
-│   ├── stop_yarbis.sh             # Kills everything
-│   ├── healthcheck.sh             # Status check (returns non-zero if any service is down)
-│   ├── install.sh                 # First-time setup
-│   ├── start_yarbis.sh            # Production-style boot for launchd
-│   ├── dev_voice.sh               # Voice-bridge with watchfiles auto-reload
-│   ├── dev_ui.sh                  # Next.js dev server
+│   ├── dev_all.sh                 # Arranca los 5 servicios (paneles de Terminal vía osascript)
+│   ├── stop_yarbis.sh             # Mata todo
+│   ├── healthcheck.sh             # Status check (retorna no-cero si algún servicio cae)
+│   ├── install.sh                 # Setup primera vez
+│   ├── start_yarbis.sh            # Boot estilo producción para launchd
+│   ├── dev_voice.sh               # Voice-bridge con auto-recarga via watchfiles
+│   ├── dev_ui.sh                  # Dev server de Next.js
 │   └── launchd/
 │       └── com.ecomdrop.yarbis.plist
 ├── docs/
-│   ├── SETUP.md                   # Step-by-step install
-│   ├── VOICE_COMMANDS.md          # All 17 tools + triggers
-│   ├── TROUBLESHOOTING.md         # Common issues
-│   ├── jarvis-reference.md        # JARVIS movie lore
+│   ├── SETUP.md                   # Instalación paso a paso
+│   ├── VOICE_COMMANDS.md          # Los 17 tools + triggers
+│   ├── TROUBLESHOOTING.md         # Issues comunes
+│   ├── jarvis-reference.md        # Lore de JARVIS (películas)
 │   ├── mcp-tools-guide.md
+│   ├── demo.svg                   # Mockup vectorial del HUD (para README)
 │   └── roadmap.md
-├── ARCHITECTURE.md                # System diagrams + data flow
-├── README.md                      # Public-facing intro
+├── ARCHITECTURE.md                # Diagramas + flujo de datos
+├── README.md                      # Intro pública
 ├── LICENSE                        # MIT
-├── .env.example                   # Template (no real keys)
-└── livekit.yaml                   # LiveKit Server config
+├── .env.example                   # Template (sin keys reales)
+└── livekit.yaml                   # Config de LiveKit Server
 ```
 
-## Key conventions
+## Convenciones clave
 
-### 1. The voice loop is OpenAI direct, NOT Hermes-via-voice
+### 1. El voice loop es OpenAI directo, NO Hermes-via-voice
 
-We tried routing voice through Hermes's Gateway. Hermes inflates the prompt with SOUL.md + memory + 89 skills (~13k tokens), making first-token latency 10–25 seconds — unusable for real-time voice.
+Probamos rutear voz a través del Gateway de Hermes. Hermes infla el prompt con SOUL.md + memoria + 89 skills (~13k tokens), haciendo que la latencia al primer token sea de 10–25 segundos — inutilizable para voz en tiempo real.
 
-So the voice-bridge uses **OpenAI gpt-4o-mini directly** with a minimal Spanish system prompt (`YARBIS_INSTRUCTIONS` in `main.py`). Hermes is reachable via the `ask_hermes` voice tool when YARBIS needs heavy tasks (delegated explicitly, with a 5–15s warning).
+Entonces el voice-bridge usa **OpenAI gpt-4o-mini directo** con un system prompt mínimo en español (`YARBIS_INSTRUCTIONS` en `main.py`). Hermes es alcanzable vía el voice tool `ask_hermes` cuando YARBIS necesita tareas pesadas (delegado explícitamente, con un warning de 5–15s).
 
-**Don't try to route voice through Hermes again.** It's been tested. It doesn't work.
+**No intentes rutear voz por Hermes de nuevo.** Ya se probó. No funciona.
 
-### 2. Function tools live in two files
+### 2. Los function tools viven en dos archivos
 
-- `voice-bridge/tools.py` — small, daily-use tools (welcome ritual, music, open app, open URL)
-- `voice-bridge/tools_advanced.py` — research, project ops, system, Hermes delegation
+- `voice-bridge/tools.py` — pequeños, de uso diario (welcome ritual, música, abrir app, abrir URL)
+- `voice-bridge/tools_advanced.py` — investigación, project ops, sistema, delegación a Hermes
 
-Each tool is `@function_tool()`-decorated. The **docstring is what the LLM reads** to decide when to call it — write them as **Spanish prompt instructions**, not API docs.
+Cada tool está decorado con `@function_tool()`. **El docstring es lo que el LLM lee** para decidir cuándo llamarlo — escríbelos como **instrucciones de prompt en español**, no como docs de API.
 
-When you add a new tool:
-1. Define the function with a clear Spanish docstring
-2. Append it to the matching `ALL_TOOLS` or `ADVANCED_TOOLS` list
-3. Update `YARBIS_INSTRUCTIONS` in `main.py` with the trigger phrases (so the LLM has explicit examples)
-4. Save — `watchfiles` auto-reloads the worker
+Cuando agregues un tool nuevo:
+1. Define la función con un docstring claro en español
+2. Agrégalo a la lista `ALL_TOOLS` o `ADVANCED_TOOLS` correspondiente
+3. Actualiza `YARBIS_INSTRUCTIONS` en `main.py` con las frases trigger (para que el LLM tenga ejemplos explícitos)
+4. Guarda — `watchfiles` auto-recarga el worker
 
-### 3. Electron command server for window control
+### 3. Servidor de comandos de Electron para control de ventana
 
-`electron/main.js` runs a local HTTP server on `127.0.0.1:9871`. Voice tools POST to it instead of using AppleScript:
+`electron/main.js` corre un servidor HTTP local en `127.0.0.1:9871`. Los voice tools le hacen POST en lugar de usar AppleScript:
 
-| Endpoint | Effect |
+| Endpoint | Efecto |
 |---|---|
-| `POST /show` | Bring window to front |
-| `POST /show-fullscreen` | Show + fullscreen (used by `welcome_ritual`) |
-| `POST /hide` | Hide window (mic stays active!) |
-| `POST /exit-fullscreen` | Leave fullscreen |
+| `POST /show` | Trae la ventana al frente |
+| `POST /show-fullscreen` | Mostrar + fullscreen (usado por `welcome_ritual`) |
+| `POST /hide` | Oculta la ventana (¡el mic sigue activo!) |
+| `POST /exit-fullscreen` | Sale de fullscreen |
 
-Window close is intercepted in `electron/main.js`: instead of destroying webContents (which kills the mic), `event.preventDefault()` + `win.hide()`. The renderer keeps running with `backgroundThrottling: false`.
+El cierre de ventana se intercepta en `electron/main.js`: en lugar de destruir webContents (lo que mata el mic), `event.preventDefault()` + `win.hide()`. El renderer sigue corriendo con `backgroundThrottling: false`.
 
-### 4. UI components and z-index hierarchy
+### 4. Componentes del UI y jerarquía z-index
 
-The `<VoiceRoom>` mounts everything in this z-order:
+El `<VoiceRoom>` monta todo en este orden de z:
 
 ```
 z-0   DevBackground (code rain, blueprint marks, circuit traces)
-z-5   HudFrame (3 rotating SVG rings — SMIL animateTransform)
-z-7   AudioOrbit (72 radial bars, audio-reactive)
-z-10  ArcReactor (focal element — biggest glow)
+z-5   HudFrame (3 anillos SVG rotantes — SMIL animateTransform)
+z-7   AudioOrbit (72 barras radiales, reactivas a audio)
+z-10  ArcReactor (elemento focal — glow más fuerte)
 z-20  HudHeader, StatusPanel, AiEngine, QuotePanel, BuildActivity, HudFooter
 ```
 
-**Critical**: HudFrame must be BELOW ArcReactor (z-5 < z-10). If you put it above, the rings float over the focal point and break the visual hierarchy.
+**Crítico**: HudFrame debe estar DEBAJO del ArcReactor (z-5 < z-10). Si lo pones encima, los anillos flotan sobre el foco y rompe la jerarquía visual.
 
-### 5. Rotations use SMIL, not CSS
+### 5. Las rotaciones usan SMIL, no CSS
 
-Ring rotations (`HudFrame.tsx`) use SVG `<animateTransform>`, not CSS keyframes. CSS `transform-box: view-box` is unreliable across browsers and the rings drift off-center. SMIL rotates around `0,0` of the parent SVG coordinate system (which is the viewBox center). Stick with SMIL for any new rotating SVG element.
+Las rotaciones de los anillos (`HudFrame.tsx`) usan SVG `<animateTransform>`, no CSS keyframes. CSS `transform-box: view-box` no es confiable entre browsers y los anillos se descentran. SMIL rota alrededor de `0,0` del sistema de coordenadas del SVG padre (que es el centro del viewBox). Quédate con SMIL para cualquier elemento SVG nuevo que rote.
 
-### 6. Audio ducking is client-side
+### 6. El audio ducking es del lado del cliente
 
-The Python `BackgroundAudioPlayer` does NOT have ducking — verified by reading its source. The agent publishes 2 separate tracks:
-- `roomio_audio` — the voice (TTS)
-- `background_audio` — the music
+El `BackgroundAudioPlayer` de Python NO tiene ducking — verificado leyendo su source. El agent publica 2 tracks separados:
+- `roomio_audio` — la voz (TTS)
+- `background_audio` — la música
 
-Ducking is implemented in the React client (`useDuckBackgroundMusic` hook in `VoiceRoom.tsx`):
-1. Find the `background_audio` track in the room
-2. Get its `<audio>` element
-3. Animate `.volume` based on `AgentState`:
+El ducking se implementa en el cliente React (hook `useDuckBackgroundMusic` en `VoiceRoom.tsx`):
+1. Encuentra el track `background_audio` en el room
+2. Toma su elemento `<audio>`
+3. Anima `.volume` según el `AgentState`:
    - `speaking` → 0.10
    - `thinking` → 0.55
    - else → 0.85
-4. Linear ramp 250ms via `requestAnimationFrame`
-5. **Always clamp** the value to `[0, 1]` — float math drifts past 1 and `audioElement.volume` rejects with IndexSizeError
+4. Rampa lineal 250ms vía `requestAnimationFrame`
+5. **Siempre clampa** el valor a `[0, 1]` — el float math drift puede pasar de 1 y `audioElement.volume` rechaza con IndexSizeError
 
 ### 7. Design tokens
 
-All in `ui/src/app/globals.css`. Don't hardcode colors or font sizes in components. Use CSS variables:
+Todo en `ui/src/app/globals.css`. No hardcodees colores ni font sizes en componentes. Usa CSS variables:
 
 ```css
 --accent: #07E2FE                   /* HUD ambient cyan */
---accent-build: #22C55E             /* "AI running" green */
+--accent-build: #22C55E             /* "AI corriendo" verde */
 --accent-warning: #F59E0B           /* amber */
---accent-error: #EF4444             /* red */
---speaking: #FB923C                 /* orange (Iron Man) */
---thinking: #A78BFA                 /* violet */
+--accent-error: #EF4444             /* rojo */
+--speaking: #FB923C                 /* naranja (Iron Man) */
+--thinking: #A78BFA                 /* violeta */
 
 --fs-display: 30px                  /* "BIENVENIDO, SEÑOR" */
---fs-h2: 16px                       /* section labels */
---fs-body: 15px                     /* content */
---fs-label: 13px                    /* secondary */
---fs-micro: 11px                    /* codes, telemetry */
+--fs-h2: 16px                       /* labels de sección */
+--fs-body: 15px                     /* contenido */
+--fs-label: 13px                    /* secundarios */
+--fs-micro: 11px                    /* códigos, telemetría */
 ```
 
-Glow utilities: `.hud-glow-ambient` (everything except reactor) and `.hud-glow-focus` (only the reactor).
+Glow utilities: `.hud-glow-ambient` (todo excepto el reactor) y `.hud-glow-focus` (solo el reactor).
 
-### 8. Fonts
+### 8. Fuentes
 
-| Variable | Font | Used for |
+| Variable | Fuente | Usada para |
 |---|---|---|
-| `--font-display` | JetBrains Mono | Section labels, codes, technical data |
-| `--font-body` | Inter | Long-form (quotes, descriptions) |
-| `--font-wordmark` | Orbitron | **ONLY** the "BIENVENIDO, SEÑOR" hero — sci-fi feel |
+| `--font-display` | JetBrains Mono | Labels de sección, códigos, datos técnicos |
+| `--font-body` | Inter | Texto largo (frases, descripciones) |
+| `--font-wordmark` | Orbitron | **SOLO** el hero "BIENVENIDO, SEÑOR" — feel sci-fi |
 
-Orbitron is used SPARINGLY — overusing it makes the UI cartoonish. Just the hero.
+Orbitron se usa CON CUIDADO — sobreusarlo hace el UI cartoonish. Solo el hero.
 
-## Common workflows
+## Workflows comunes
 
-### Add a new voice tool
-See [docs/VOICE_COMMANDS.md — tool reference](docs/VOICE_COMMANDS.md#-tool-reference-for-developers).
+### Agregar un voice tool nuevo
+Ve [docs/VOICE_COMMANDS.md — referencia de tools](docs/VOICE_COMMANDS.md#-referencia-de-tools-para-developers).
 
-### Boot the dev stack
+### Arrancar el dev stack
 ```bash
-bash scripts/dev_all.sh         # opens 5 Terminal panes
-bash scripts/healthcheck.sh     # verify
-bash scripts/stop_yarbis.sh     # kill all
+bash scripts/dev_all.sh         # abre 5 paneles de Terminal
+bash scripts/healthcheck.sh     # verifica
+bash scripts/stop_yarbis.sh     # mata todo
 ```
 
-### Force HMR after edits not reflecting
+### Forzar HMR si los cambios no se reflejan
 ```bash
 cd ui && rm -rf .next && pnpm dev
 ```
-Then `Cmd+Shift+R` in Electron.
+Luego `Cmd+Shift+R` en Electron.
 
-### Verify a UI change made it to the browser
+### Verificar que un cambio del UI llegó al browser
 ```bash
-# Look in the bundle for a string from your change
+# Busca en el bundle un string de tu cambio
 for chunk in $(curl -s http://localhost:3000 | grep -oE '/_next/static/chunks/[^"]+\.js' | head -10); do
-  if curl -s "http://localhost:3000$chunk" 2>/dev/null | grep -q "MY_STRING_FROM_THE_EDIT"; then
+  if curl -s "http://localhost:3000$chunk" 2>/dev/null | grep -q "MI_STRING_DEL_EDIT"; then
     echo "✅ $chunk"
     break
   fi
 done
 ```
 
-## Things to avoid
+## Cosas a evitar
 
-- ❌ **Don't add hud-pulse animations to panels.** It was the single biggest source of visual competition with the Arc Reactor. Removed.
-- ❌ **Don't make HudFrame `z-10`.** It must be `z-5`, below the Arc Reactor.
-- ❌ **Don't use Orbitron everywhere.** Just the hero wordmark.
-- ❌ **Don't try to route voice through Hermes's `/v1/chat/completions`.** Tested; latency makes it unusable. Voice → OpenAI direct, Hermes is for `ask_hermes` only.
-- ❌ **Don't mix `style` inline + Tailwind position classes.** Pick one. Tailwind v4 has cascade conflicts with inline `transform`.
-- ❌ **Don't commit `.env`** — it has API keys. `.gitignore` covers it but always double check.
-- ❌ **Don't kill `Cmd+W` to close Electron.** That's intercepted to hide. To actually quit, use `Cmd+Q` (menu YARBIS → Cerrar) or `kill <PID>`.
+- ❌ **No agregues animaciones hud-pulse a los paneles.** Era la fuente más grande de competencia visual con el Arc Reactor. Removida.
+- ❌ **No pongas HudFrame en `z-10`.** Debe ser `z-5`, debajo del Arc Reactor.
+- ❌ **No uses Orbitron en todos lados.** Solo el hero wordmark.
+- ❌ **No intentes rutear voz por `/v1/chat/completions` de Hermes.** Probado; la latencia lo hace inutilizable. Voz → OpenAI directo, Hermes solo para `ask_hermes`.
+- ❌ **No mezcles `style` inline + classes de posición de Tailwind.** Elige uno. Tailwind v4 tiene conflictos de cascade con `transform` inline.
+- ❌ **No commitees `.env`** — tiene API keys. `.gitignore` lo cubre pero verifica siempre.
+- ❌ **No mates Electron con `Cmd+W`.** Eso se intercepta para ocultar. Para cerrar de verdad, usa `Cmd+Q` (menú YARBIS → Cerrar) o `kill <PID>`.
 
-## State of the world
+## Estado del mundo
 
-The roadmap is in [`docs/roadmap.md`](docs/roadmap.md). Phase 1 (voice + HUD + tools) is **done**. Phase 2 (Telegram, deeper Hermes integration) is **not started**. Phase 3 (wake-word, hardware) is **not started**.
+El roadmap está en [`docs/roadmap.md`](docs/roadmap.md). Fase 1 (voz + HUD + tools) está **lista**. Fase 2 (Telegram, integración más profunda con Hermes) **no empezó**. Fase 3 (wake-word, hardware) **no empezó**.
 
-## Questions while editing?
+## ¿Preguntas mientras editas?
 
-- **System architecture** → [`ARCHITECTURE.md`](ARCHITECTURE.md)
-- **How to add a feature** → [`docs/SETUP.md`](docs/SETUP.md#10-customization)
-- **Why something looks the way it does** → look at the **Things to avoid** section above; it's documenting design decisions that took several iterations to settle.
+- **Arquitectura del sistema** → [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- **Cómo agregar una feature** → [`docs/SETUP.md`](docs/SETUP.md#10-personalización)
+- **Por qué algo se ve como se ve** → mira la sección **Cosas a evitar** arriba; está documentando decisiones de diseño que tomaron varias iteraciones para asentarse.

@@ -1,105 +1,105 @@
-# Contributing to YARBIS
+# Contribuir a YARBIS
 
-Thanks for considering a contribution! This document covers how to set up your environment, run the project, and submit changes.
+¡Gracias por considerar una contribución! Este documento cubre cómo configurar tu entorno, correr el proyecto y enviar cambios.
 
-## Quick checklist before submitting a PR
+## Checklist rápido antes de enviar un PR
 
-- [ ] You can run `bash scripts/healthcheck.sh` and see 6/6 OK
-- [ ] You ran `cd ui && pnpm build` — build is clean
-- [ ] You tested the change end-to-end (talked to YARBIS, verified the new behavior)
-- [ ] You didn't commit any API keys (check `git diff` against `.env`)
-- [ ] Your commits have descriptive messages
+- [ ] Puedes correr `bash scripts/healthcheck.sh` y ver 6/6 OK
+- [ ] Corriste `cd ui && pnpm build` — el build está limpio
+- [ ] Probaste el cambio de punta a punta (le hablaste a YARBIS, verificaste el comportamiento nuevo)
+- [ ] No commiteaste API keys (revisa `git diff` contra `.env`)
+- [ ] Tus commits tienen mensajes descriptivos
 
-## Development setup
+## Setup de desarrollo
 
-See [docs/SETUP.md](docs/SETUP.md) for the full setup. TL;DR:
+Ve [docs/SETUP.md](docs/SETUP.md) para el setup completo. TL;DR:
 
 ```bash
 git clone <fork>
 cd yarbis-asistente
 bash scripts/install.sh
-cp .env.example .env  # fill in OPENAI_API_KEY, DEEPGRAM_API_KEY, ELEVENLABS_API_KEY
+cp .env.example .env  # completa OPENAI_API_KEY, DEEPGRAM_API_KEY, ELEVENLABS_API_KEY
 cd ui && pnpm install && cd ..
 cd electron && npm install && cd ..
 bash scripts/dev_all.sh
 ```
 
-## Code style
+## Estilo de código
 
 ### Python (`voice-bridge/`)
 
-- Format with `ruff` (or just match existing style)
-- Type hints encouraged, not strictly enforced
-- Docstrings on every `@function_tool()` — and write them in Spanish, as **prompt instructions** (the LLM reads them)
+- Formatea con `ruff` (o solo replica el estilo existente)
+- Type hints son recomendados, no estrictamente obligatorios
+- Docstrings en cada `@function_tool()` — y escríbelos en español, como **instrucciones de prompt** (el LLM los lee)
 
 ### TypeScript / React (`ui/`)
 
 - ESLint enforced (`pnpm lint`)
-- Components are functional with hooks, no classes
-- Tailwind v4 utility classes — use design tokens from `globals.css` over hardcoded values
-- Each component has a brief JSDoc explaining its role in the HUD
+- Componentes funcionales con hooks, sin clases
+- Utility classes de Tailwind v4 — usa los design tokens de `globals.css` antes que valores hardcoded
+- Cada componente tiene un JSDoc breve explicando su rol en el HUD
 
 ### CSS
 
-- All design tokens in `ui/src/app/globals.css`
-- Don't introduce new colors without a token
-- Avoid `style` inline mixed with Tailwind position classes — pick one (we've been burned by cascade conflicts)
+- Todos los design tokens en `ui/src/app/globals.css`
+- No introduzcas colores nuevos sin un token
+- Evita mezclar `style` inline con classes de posición de Tailwind — elige uno (nos quemamos con conflictos de cascade)
 
-## Adding a voice command
+## Agregar un comando de voz
 
-1. Open `voice-bridge/tools_advanced.py` (or `tools.py` for simple cases)
-2. Add a function:
+1. Abre `voice-bridge/tools_advanced.py` (o `tools.py` para casos simples)
+2. Agrega una función:
 
    ```python
    @function_tool()
    async def my_tool(arg: str) -> str:
-       """Spanish docstring describing exactly when Elkin should trigger this. \
-   Include 4-6 example phrases the LLM can match against."""
-       # implementation
+       """Docstring en español describiendo exactamente cuándo Elkin debería \
+   disparar esto. Incluye 4-6 frases de ejemplo que el LLM pueda matchear."""
+       # implementación
        return "respuesta corta para que YARBIS la lea"
    ```
 
-3. Append it to `ALL_TOOLS` (or `ADVANCED_TOOLS`)
-4. Update `YARBIS_INSTRUCTIONS` in `main.py` so the LLM has explicit triggers
-5. Save — `watchfiles` reloads the worker
-6. Test by speaking the trigger phrase
+3. Agrégalo a `ALL_TOOLS` (o `ADVANCED_TOOLS`)
+4. Actualiza `YARBIS_INSTRUCTIONS` en `main.py` para que el LLM tenga triggers explícitos
+5. Guarda — `watchfiles` recarga el worker
+6. Prueba diciendo la frase trigger
 
-## Adding a UI component
+## Agregar un componente al UI
 
-1. Create `ui/src/components/MyComponent.tsx`
-2. Use design tokens (`--accent`, `--fs-body`, etc.)
-3. Place it correctly in the z-index hierarchy (see [CLAUDE.md](CLAUDE.md#4-ui-components-and-z-index-hierarchy))
-4. Mount it in `VoiceRoom.tsx`
+1. Crea `ui/src/components/MyComponent.tsx`
+2. Usa los design tokens (`--accent`, `--fs-body`, etc.)
+3. Posiciónalo correctamente en la jerarquía de z-index (ver [CLAUDE.md](CLAUDE.md#4-componentes-del-ui-y-jerarquía-z-index))
+4. Móntalo en `VoiceRoom.tsx`
 
-## What we're looking for
+## Lo que estamos buscando
 
-### Especially welcome
+### Especialmente bienvenido
 
-- 🌍 Localization (Mexican Spanish, English, etc.) — adapt `YARBIS_INSTRUCTIONS` and ElevenLabs voice
-- 🔌 New MCP integrations (Linear, Stripe, etc.) via Hermes
-- 🎨 Theme variants (dark cyan is default — Mark VII gold, Mark XLII blue, Stealth black)
-- 🎙️ Wake-word implementation (Picovoice Porcupine in `voice-bridge/`)
-- 🐧 Linux / Windows support (the voice-bridge is portable; Electron config + scripts need adapters)
-- 📱 Mobile companion (talk to YARBIS from your phone — would need a public LiveKit endpoint)
+- 🌍 Localización (español mexicano, inglés, etc.) — adapta `YARBIS_INSTRUCTIONS` y la voz de ElevenLabs
+- 🔌 Nuevas integraciones MCP (Linear, Stripe, etc.) vía Hermes
+- 🎨 Variantes de tema (cyan oscuro es default — Mark VII gold, Mark XLII azul, Stealth negro)
+- 🎙️ Implementación de wake-word (Picovoice Porcupine en `voice-bridge/`)
+- 🐧 Soporte Linux / Windows (el voice-bridge es portable; config de Electron + scripts necesitan adaptadores)
+- 📱 App móvil compañera (hablarle a YARBIS desde tu celular — necesitaría un endpoint LiveKit público)
 
-### Less welcome (without prior discussion)
+### Menos bienvenido (sin discusión previa)
 
-- Major architecture changes to the voice loop (LiveKit + OpenAI + Deepgram + ElevenLabs is intentional — see CLAUDE.md)
-- Adding a database (we deliberately keep state in-memory + filesystem)
-- New SaaS dependencies (the project's value prop is "fully self-hosted")
+- Cambios mayores de arquitectura al voice loop (LiveKit + OpenAI + Deepgram + ElevenLabs es intencional — ver CLAUDE.md)
+- Agregar una base de datos (deliberadamente mantenemos estado en memoria + filesystem)
+- Nuevas dependencias SaaS (la propuesta de valor del proyecto es "100% self-hosted")
 
-## Reporting issues
+## Reportar issues
 
-When opening an issue, include:
+Cuando abras un issue, incluye:
 
-- Output of `bash scripts/healthcheck.sh`
-- Your macOS version (`sw_vers`)
-- Last ~50 lines of the failing log (terminal output of the failed component)
-- Steps to reproduce
+- Output de `bash scripts/healthcheck.sh`
+- Tu versión de macOS (`sw_vers`)
+- Últimas ~50 líneas del log que falla (output de terminal del componente caído)
+- Pasos para reproducir
 
-## Commit messages
+## Mensajes de commit
 
-We use conventional-ish commits:
+Usamos commits estilo conventional:
 
 ```
 feat: add take_screenshot voice tool
@@ -109,6 +109,6 @@ refactor: move ducking logic to a custom hook
 chore: bump electron to 33.5
 ```
 
-## License
+## Licencia
 
-By contributing, you agree your contributions will be licensed under the MIT License (the same as the rest of the project).
+Al contribuir, aceptas que tus contribuciones se licencien bajo MIT (la misma del resto del proyecto).

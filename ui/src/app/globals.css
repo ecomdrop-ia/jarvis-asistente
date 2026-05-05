@@ -1,0 +1,341 @@
+@import "tailwindcss";
+
+/* ============================================================
+   YARBIS Design System — design tokens
+   Adapted from ajdesarrollador.dev's variables.css system.
+   Single source of truth for color, type, spacing, motion.
+   ============================================================ */
+
+:root {
+  /* ─── Backgrounds (deep teal — not pure black, has life) ───────── */
+  /* The previous near-black felt like "off TV". This palette is what
+     a real Mark XLII workshop looks like: deep teal-cyan that absorbs
+     light but reflects ambient glow from the screens & arc reactor. */
+  --bg-primary:   #0C1F28;
+  --bg-secondary: #102530;
+  --bg-tertiary:  #16303B;
+
+  /* ─── Brand accent (HUD ambient) ───────────────────────────────── */
+  --accent:        #07E2FE;
+  --accent-soft:   rgba(7, 226, 254, 0.12);
+  --accent-hover:  rgba(7, 226, 254, 0.40);
+  --accent-glow:   rgba(7, 226, 254, 0.35);
+  --accent-edge:   rgba(7, 226, 254, 0.20);
+
+  /* ─── Semantic accents (the AI-builder palette) ────────────────── */
+  /* These are the colors that signal "developer/builder dashboard"
+     vs generic JARVIS — the green pulse of an active build, amber for
+     attention, red for failure.  Used by status LEDs, stack chips,
+     build activity feed. */
+  --accent-build:    #22C55E;  /* AI running, builds OK, success */
+  --accent-build-soft: rgba(34, 197, 94, 0.15);
+  --accent-warning:  #F59E0B;  /* processing, mic muted, attention */
+  --accent-error:    #EF4444;  /* failures, off-line subsystems */
+
+  /* ─── Voice state accents ──────────────────────────────────────── */
+  --speaking: #FB923C;
+  --thinking: #A78BFA;
+
+  /* ─── Text ─────────────────────────────────────────────────────── */
+  --text-primary:   #E6F7F9;
+  --text-secondary: #8BA3A6;
+  --text-muted:     #7A9599;
+  --text-dim:       rgba(139, 163, 166, 0.5);
+
+  /* ─── Type families ────────────────────────────────────────────── */
+  /* Display: JetBrains Mono (modern monospace, used by Linear, Vercel) */
+  /* Body:    Inter (clean sans-serif for long form)                   */
+  --font-mono: var(--font-display);   /* alias for tabular numbers     */
+
+  /* ─── Type scale (refined — 5 sizes, ~30% larger than v1) ──────── */
+  /* Kept fluid only for hero/landing.  HUD uses fixed pixels so the
+     instrumentation reads consistently regardless of viewport.
+     Bumped from the previous 9-22px range up to 11-30px so the lateral
+     panels can compete with the Arc Reactor's visual weight without
+     overpowering it. */
+  --fs-hero:    clamp(2.5rem, 7vw, 6rem);  /* landing only */
+  --fs-display: 30px;  /* "BIENVENIDO, SEÑOR" — used once */
+  --fs-h2:      16px;  /* section labels (SUBSISTEMAS, FRASE DEL DÍA) */
+  --fs-body:    15px;  /* readable content (subsystems, quote) */
+  --fs-label:   13px;  /* secondary labels, tag chips */
+  --fs-micro:   11px;  /* codes, telemetry, footer stats */
+
+  --lh-tight:   1.1;
+  --lh-heading: 1.2;
+  --lh-body:    1.55;
+
+  --tracking-tight:  0;
+  --tracking-wide:   0.18em;
+  --tracking-wider:  0.3em;
+  --tracking-widest: 0.4em;
+
+  /* ─── Spacing (4px scale) ──────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+
+  /* ─── Radii (HUD prefers minimal radius) ───────────────────────── */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* ─── Easings (carefully tuned cubic-beziers) ──────────────────── */
+  --ease-out:    cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-back:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast:   150ms;
+  --duration-medium: 300ms;
+  --duration-slow:   600ms;
+
+  /* ─── Glow stack ───────────────────────────────────────────────── */
+  --glow-sm: 0 0 12px var(--accent-glow);
+  --glow-md: 0 0 24px var(--accent-glow);
+  --glow-lg: 0 0 48px rgba(7, 226, 254, 0.5);
+
+  /* ─── Tailwind theme bridge ────────────────────────────────────── */
+}
+
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-display);
+  --font-wordmark: var(--font-wordmark);
+}
+
+/* ─── Body — multi-layer ambient atmosphere ────────────────────── */
+/*
+ * Five gradient layers create depth & "AI workshop" feel:
+ *  1. Top cyan glow — like a screen lighting the room from above
+ *  2. Reactor glow — soft cyan pool radiating from screen center
+ *  3. Side ambient — left & right edge wash, hints of equipment
+ *  4. Violet undertone — far-bottom, warmer counterweight
+ *  5. Base teal — the deep wall of the lab itself
+ */
+body {
+  background:
+    /* 1. Top wash from "monitor light" */
+    radial-gradient(ellipse 90% 40% at 50% -5%, rgba(7, 226, 254, 0.13), transparent 65%),
+    /* 2. Reactor glow — center pool */
+    radial-gradient(ellipse 60% 55% at 50% 50%, rgba(7, 226, 254, 0.08), transparent 70%),
+    /* 3a. Left edge ambient */
+    radial-gradient(ellipse 25% 90% at 0% 50%, rgba(7, 226, 254, 0.05), transparent 55%),
+    /* 3b. Right edge ambient */
+    radial-gradient(ellipse 25% 90% at 100% 50%, rgba(7, 226, 254, 0.05), transparent 55%),
+    /* 4. Bottom violet hint */
+    radial-gradient(ellipse 70% 30% at 50% 105%, rgba(167, 139, 250, 0.06), transparent 65%),
+    /* 5. Base */
+    var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: var(--tracking-norm);
+}
+
+/* ─── Background grid (more visible — feels like a real AI panel) ─ */
+.hud-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    /* Major lines every 96px */
+    linear-gradient(to right,  rgba(7, 226, 254, 0.085) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 226, 254, 0.085) 1px, transparent 1px),
+    /* Sub-lines every 24px */
+    linear-gradient(to right,  rgba(7, 226, 254, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 226, 254, 0.025) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  mask-image: radial-gradient(ellipse 90% 80% at center, #000 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+}
+
+/* ─── CRT scanlines + horizontal holographic scan ────────────────── */
+.hud-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(7, 226, 254, 0) 0px,
+    rgba(7, 226, 254, 0) 2px,
+    rgba(7, 226, 254, 0.025) 3px,
+    rgba(7, 226, 254, 0) 4px
+  );
+  mix-blend-mode: screen;
+}
+
+/* Holographic horizontal sweep — slow line that crosses the screen.
+   Reads as "scanning" without being aggressive. */
+@keyframes hud-horizontal-scan {
+  0%   { transform: translateY(-20vh); opacity: 0; }
+  10%  { opacity: 0.55; }
+  90%  { opacity: 0.55; }
+  100% { transform: translateY(120vh); opacity: 0; }
+}
+.hud-grid::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 60px;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom,
+      transparent 0%,
+      rgba(7, 226, 254, 0.04) 45%,
+      rgba(7, 226, 254, 0.10) 50%,
+      rgba(7, 226, 254, 0.04) 55%,
+      transparent 100%);
+  filter: blur(1px);
+  animation: hud-horizontal-scan 14s linear infinite;
+  mix-blend-mode: screen;
+}
+
+/* ─── Ring rotations ────────────────────────────────────────────── */
+/*
+ * IMPORTANT: SVG `<g>` elements default to `transform-box: fill-box`,
+ * which makes rotations spin around the bounding box of the group's
+ * own content. When a group only contains arcs in part of the circle
+ * (e.g., bracket marks at cardinals), that bounding box isn't centered
+ * on the viewBox origin, so the rotation appears to drift off-center.
+ *
+ * Forcing `transform-box: view-box` makes the origin the SVG's own
+ * viewBox center, which is (0,0) for our `viewBox="-200 -200 400 400"`
+ * and `viewBox="-100 -100 200 200"` SVGs — exactly where we want the
+ * rotation pivot.
+ */
+@keyframes hud-spin     { to { transform: rotate(360deg); } }
+@keyframes hud-spin-rev { to { transform: rotate(-360deg); } }
+.hud-spin-slow,
+.hud-spin-med,
+.hud-spin-fast {
+  transform-box: view-box;
+  transform-origin: center;
+}
+.hud-spin-slow { animation: hud-spin     45s linear infinite; }
+.hud-spin-med  { animation: hud-spin-rev 22s linear infinite; }
+.hud-spin-fast { animation: hud-spin     11s linear infinite; }
+
+/* ─── Glow utilities (only 2 — focus vs ambient) ───────────────── */
+/*
+ * The visual hierarchy depends on glow being scarce.  Only the Arc
+ * Reactor uses `hud-glow-focus`.  Everything else (header, panels,
+ * footer, labels) uses `hud-glow-ambient` or no glow at all.
+ *
+ * `hud-glow` and `hud-glow-soft` are kept as ambient aliases for
+ * back-compat with existing classNames; they all collapse to the
+ * same restrained text-shadow.
+ */
+.hud-glow,
+.hud-glow-soft,
+.hud-glow-ambient {
+  text-shadow: 0 0 6px rgba(7, 226, 254, 0.4);
+}
+.hud-glow-focus {
+  text-shadow:
+    0 0 12px rgba(7, 226, 254, 0.85),
+    0 0 28px rgba(7, 226, 254, 0.4);
+}
+/* Wordmark — punchier than focus, used only on the "BIENVENIDO, SEÑOR"
+   headline so it carries the hero weight of the HUD typography. */
+.hud-glow-wordmark {
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.35),
+    0 0 18px rgba(7, 226, 254, 0.75),
+    0 0 36px rgba(7, 226, 254, 0.45),
+    0 0 64px rgba(7, 226, 254, 0.20);
+}
+/* Back-compat: anything still using `hud-glow-strong` falls back to
+   the ambient glow.  Avoid in new code. */
+.hud-glow-strong { text-shadow: 0 0 6px rgba(7, 226, 254, 0.4); }
+
+/* ─── Panel surface (tactical card) ─────────────────────────────── */
+/*
+ * Static glow only — the previous `hud-pulse 5s` animation was the
+ * single biggest source of competition with the Arc Reactor.
+ *
+ * IMPORTANT: do NOT set `position` here.  The component decides whether
+ * to use `absolute` (for placed panels like StatusPanel/QuotePanel) or
+ * `relative` (for inline use).  Setting `position: relative` here
+ * collides with Tailwind's `absolute` utility (same specificity, this
+ * file loads later in the cascade → it wins → panels fall into flow).
+ *
+ * The ::before/::after corner cutouts position themselves against the
+ * panel either way, since the panel always ends up positioned by the
+ * caller (absolute via Tailwind utility) — that's a valid stacking
+ * context for absolute children.
+ */
+.hud-panel {
+  border: 1px solid rgba(7, 226, 254, 0.22);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(10, 22, 24, 0.85) 100%);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 14px rgba(7, 226, 254, 0.08),
+    inset 0 0 14px rgba(7, 226, 254, 0.04);
+}
+
+/* Corner cutouts — tactical card detail */
+.hud-panel::before, .hud-panel::after {
+  content: "";
+  position: absolute;
+  width: 14px; height: 14px;
+  border-color: var(--accent);
+  border-style: solid;
+  pointer-events: none;
+}
+.hud-panel::before {
+  top: -1px; left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.hud-panel::after {
+  bottom: -1px; right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+/* ─── LED indicator dot ─────────────────────────────────────────── */
+.hud-led {
+  width: 7px; height: 7px;
+  border-radius: 9999px;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor, 0 0 14px currentColor;
+}
+
+/* ─── Audio bar idle flicker ────────────────────────────────────── */
+@keyframes hud-flicker {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.85; }
+}
+.hud-bar { animation: hud-flicker 2.4s var(--ease-in-out) infinite; }
+
+/* ─── Scan line crossing the HUD ────────────────────────────────── */
+@keyframes hud-scan {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+.hud-scan-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--accent), transparent);
+  filter: blur(1px);
+  animation: hud-scan 7s linear infinite;
+}
+
+/* ─── Reduced motion: kill all decorative animations ────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hud-spin-slow, .hud-spin-med, .hud-spin-fast,
+  .hud-bar, .hud-scan-line {
+    animation: none !important;
+  }
+}

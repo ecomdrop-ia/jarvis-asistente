@@ -1,0 +1,595 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid meet" font-family="ui-monospace, 'SF Mono', Menlo, monospace">
+  <!-- ════════════════════════════════════════════════════════════════
+       YARBIS HUD — Static SVG mockup for README header.
+       Replicates the Electron HUD layout: header, stack chips, status
+       panel, AI engine, quote, build activity, footer, arc reactor with
+       3 concentric rings + radial audio orbit, dev background.
+       ════════════════════════════════════════════════════════════════ -->
+
+  <defs>
+    <!-- Background gradient: deep teal with cyan ambient pools -->
+    <radialGradient id="bg-top" cx="50%" cy="0%" r="55%">
+      <stop offset="0%"  stop-color="#07E2FE" stop-opacity="0.13"/>
+      <stop offset="100%" stop-color="#07E2FE" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg-center" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#07E2FE" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#07E2FE" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg-bottom" cx="50%" cy="100%" r="40%">
+      <stop offset="0%"  stop-color="#A78BFA" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Arc reactor radial -->
+    <radialGradient id="reactor" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="20%"  stop-color="#07E2FE" stop-opacity="0.85"/>
+      <stop offset="60%"  stop-color="#07E2FE" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#07E2FE" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ray" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#07E2FE" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#07E2FE" stop-opacity="0.05"/>
+    </radialGradient>
+
+    <!-- Glow filters -->
+    <filter id="glow-focus" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Grid pattern -->
+    <pattern id="grid-major" width="96" height="96" patternUnits="userSpaceOnUse">
+      <path d="M 96 0 L 0 0 0 96" fill="none" stroke="#07E2FE" stroke-opacity="0.085" stroke-width="1"/>
+    </pattern>
+    <pattern id="grid-minor" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#07E2FE" stroke-opacity="0.025" stroke-width="1"/>
+    </pattern>
+
+    <!-- Mask for grid (faded toward edges) -->
+    <radialGradient id="grid-mask" cx="50%" cy="50%" r="60%">
+      <stop offset="0%"  stop-color="#fff" stop-opacity="1"/>
+      <stop offset="60%" stop-color="#fff" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="grid-fade">
+      <rect width="1600" height="1000" fill="url(#grid-mask)"/>
+    </mask>
+  </defs>
+
+  <!-- ═══ Background ════════════════════════════════════════════════ -->
+  <rect width="1600" height="1000" fill="#0C1F28"/>
+  <rect width="1600" height="1000" fill="url(#bg-top)"/>
+  <rect width="1600" height="1000" fill="url(#bg-center)"/>
+  <rect width="1600" height="1000" fill="url(#bg-bottom)"/>
+
+  <!-- Grid -->
+  <g mask="url(#grid-fade)">
+    <rect width="1600" height="1000" fill="url(#grid-minor)"/>
+    <rect width="1600" height="1000" fill="url(#grid-major)"/>
+  </g>
+
+  <!-- ═══ Code rain (left + right) ══════════════════════════════════ -->
+  <g font-size="10" fill="#07E2FE" fill-opacity="0.13" font-family="'JetBrains Mono', monospace">
+    <text x="20" y="180">async def yarbis():</text>
+    <text x="20" y="200">  while alive:</text>
+    <text x="20" y="220">    text = await stt.recv()</text>
+    <text x="20" y="240">    reply = await llm(text)</text>
+    <text x="20" y="260">    await tts.send(reply)</text>
+    <text x="20" y="300">@function_tool()</text>
+    <text x="20" y="320">async def open_app(name):</text>
+    <text x="20" y="340">  subprocess.Popen(["open",</text>
+    <text x="20" y="360">    "-a", name])</text>
+    <text x="20" y="400" fill-opacity="0.30">[INFO] gpt-4o-mini · ready</text>
+    <text x="20" y="420" fill-opacity="0.30">[INFO] deepgram · es-nova-3</text>
+    <text x="20" y="440" fill-opacity="0.30">[INFO] elevenlabs · cristian</text>
+    <text x="20" y="460" fill-opacity="0.30">[OK]   voice-bridge listening</text>
+
+    <text x="1450" y="180">router.post('/v1/chat',</text>
+    <text x="1450" y="200">  authMiddleware,</text>
+    <text x="1450" y="220">  rateLimit(60),</text>
+    <text x="1450" y="240">  inferenceHandler);</text>
+    <text x="1450" y="280">await session.start(agent)</text>
+    <text x="1450" y="320">[INFO] hermes · 89 skills</text>
+    <text x="1450" y="340">[INFO] livekit · room=lab</text>
+    <text x="1450" y="360" fill-opacity="0.30">[OK] webrtc 48kHz stereo</text>
+  </g>
+
+  <!-- ═══ Circuit traces in corners ═════════════════════════════════ -->
+  <g stroke="#07E2FE" fill="none">
+    <!-- Top-left -->
+    <path d="M 0 70 L 60 70 L 80 90 L 80 130 L 110 160 L 180 160" stroke-opacity="0.22" stroke-width="1.2"/>
+    <circle cx="80" cy="90" r="2.5" fill="#07E2FE" fill-opacity="0.45"/>
+    <circle cx="80" cy="90" r="5" stroke-opacity="0.20" stroke-width="0.8"/>
+    <circle cx="110" cy="160" r="2" fill="#07E2FE" fill-opacity="0.40"/>
+    <!-- Top-right -->
+    <path d="M 1600 70 L 1540 70 L 1520 90 L 1520 130 L 1490 160 L 1420 160" stroke-opacity="0.22" stroke-width="1.2"/>
+    <circle cx="1520" cy="90" r="2.5" fill="#07E2FE" fill-opacity="0.45"/>
+    <circle cx="1520" cy="90" r="5" stroke-opacity="0.20" stroke-width="0.8"/>
+    <!-- Bottom-left -->
+    <path d="M 0 930 L 60 930 L 80 910 L 80 870 L 110 840 L 180 840" stroke-opacity="0.18" stroke-width="1.2"/>
+    <circle cx="80" cy="910" r="2.5" fill="#07E2FE" fill-opacity="0.40"/>
+    <!-- Bottom-right -->
+    <path d="M 1600 930 L 1540 930 L 1520 910 L 1520 870 L 1490 840 L 1420 840" stroke-opacity="0.18" stroke-width="1.2"/>
+    <circle cx="1520" cy="910" r="2.5" fill="#07E2FE" fill-opacity="0.40"/>
+  </g>
+
+  <!-- ═══ Header — top bar ═════════════════════════════════════════ -->
+  <!-- Left: identity + clock -->
+  <g transform="translate(40, 30)" font-family="'JetBrains Mono', monospace">
+    <circle cx="6" cy="6" r="4" fill="#07E2FE" filter="url(#glow-soft)"/>
+    <text x="18" y="11" font-size="13" fill="#cffafe" letter-spacing="2.5">YARBIS</text>
+    <text x="76" y="11" font-size="13" fill="#07E2FE" fill-opacity="0.45" letter-spacing="2">//</text>
+    <text x="93" y="11" font-size="13" fill="#07E2FE" fill-opacity="0.65">v3.0.1</text>
+    <text y="38" font-size="11" fill="#07E2FE" fill-opacity="0.55" letter-spacing="3">LUNES, 05 DE MAYO DE 2026</text>
+    <text y="62" font-size="19" fill="#cffafe" letter-spacing="2.5">17:25:11</text>
+  </g>
+
+  <!-- Center: SISTEMA ACTIVADO / BIENVENIDO, SEÑOR -->
+  <g transform="translate(800, 30)" text-anchor="middle">
+    <line x1="-160" y1="10" x2="-110" y2="10" stroke="#07E2FE" stroke-opacity="0.55"/>
+    <text y="14" font-size="12" fill="#07E2FE" fill-opacity="0.75" letter-spacing="4.8" font-family="'JetBrains Mono', monospace">SISTEMA ACTIVADO</text>
+    <line x1="110" y1="10" x2="160" y2="10" stroke="#07E2FE" stroke-opacity="0.55"/>
+
+    <text y="58" font-size="36" font-weight="500" fill="#cffafe" letter-spacing="14" filter="url(#glow-focus)" font-family="Orbitron, 'JetBrains Mono', monospace">BIENVENIDO,&#160;SEÑOR</text>
+
+    <line x1="-180" y1="80" x2="-140" y2="80" stroke="#07E2FE" stroke-opacity="0.35"/>
+    <text y="84" font-size="11" fill="#07E2FE" fill-opacity="0.55" letter-spacing="4.5" font-family="'JetBrains Mono', monospace">⟡  LAB · BUCARAMANGA · COLOMBIA  ⟡</text>
+    <line x1="140" y1="80" x2="180" y2="80" stroke="#07E2FE" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- Right: ESTADO ACTUAL badge -->
+  <g transform="translate(1450, 30)" text-anchor="end" font-family="'JetBrains Mono', monospace">
+    <text y="11" font-size="12" fill="#67e8f9" fill-opacity="0.65" letter-spacing="3.5">ESTADO ACTUAL</text>
+    <rect x="-130" y="22" width="130" height="32" fill="#000" fill-opacity="0.55" stroke="#67e8f9" stroke-opacity="0.55"/>
+    <circle cx="-115" cy="38" r="3.5" fill="#67e8f9" filter="url(#glow-soft)"/>
+    <text x="-15" y="43" font-size="13" fill="#67e8f9" letter-spacing="4.2">ESCUCHANDO</text>
+    <text y="76" font-size="11" fill="#07E2FE" fill-opacity="0.55" letter-spacing="4.5">CH-01 · 48kHz</text>
+  </g>
+
+  <!-- ═══ Stack chips row ═══════════════════════════════════════════ -->
+  <g transform="translate(800, 145)" text-anchor="middle" font-family="'JetBrains Mono', monospace">
+    <g transform="translate(-360, 0)">
+      <rect x="0" y="0" width="160" height="26" rx="2" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.22"/>
+      <circle cx="14" cy="13" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+      <text x="84" y="17" font-size="11" fill="#cffafe" fill-opacity="0.85" letter-spacing="2.4">CLAUDE-OPUS-4.6</text>
+    </g>
+    <g transform="translate(-185, 0)">
+      <rect x="0" y="0" width="135" height="26" rx="2" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.22"/>
+      <circle cx="14" cy="13" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+      <text x="71" y="17" font-size="11" fill="#cffafe" fill-opacity="0.85" letter-spacing="2.4">GPT-4o-MINI</text>
+    </g>
+    <g transform="translate(-35, 0)">
+      <rect x="0" y="0" width="120" height="26" rx="2" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.22"/>
+      <circle cx="14" cy="13" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+      <text x="64" y="17" font-size="11" fill="#cffafe" fill-opacity="0.85" letter-spacing="2.4">HERMES · 89</text>
+    </g>
+    <g transform="translate(100, 0)">
+      <rect x="0" y="0" width="100" height="26" rx="2" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.22"/>
+      <circle cx="14" cy="13" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+      <text x="54" y="17" font-size="11" fill="#cffafe" fill-opacity="0.85" letter-spacing="2.4">DEEPGRAM</text>
+    </g>
+    <g transform="translate(215, 0)">
+      <rect x="0" y="0" width="115" height="26" rx="2" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.22"/>
+      <circle cx="14" cy="13" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+      <text x="62" y="17" font-size="11" fill="#cffafe" fill-opacity="0.85" letter-spacing="2.4">ELEVENLABS</text>
+    </g>
+    <g transform="translate(345, 0)">
+      <rect x="0" y="0" width="100" height="26" rx="2" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.22"/>
+      <circle cx="14" cy="13" r="3" fill="#67e8f9" filter="url(#glow-soft)"/>
+      <text x="54" y="17" font-size="11" fill="#cffafe" fill-opacity="0.85" letter-spacing="2.4">SUPABASE</text>
+    </g>
+  </g>
+
+  <!-- ═══ HUD ring system (centered at 800,520) ═════════════════════ -->
+  <g transform="translate(800, 520)">
+    <!-- Outer ring (r=300) — slow CW -->
+    <circle r="300" fill="none" stroke="#07E2FE" stroke-opacity="0.14" stroke-width="1.5"/>
+    <path d="M -52 -296 A 300 300 0 0 1 92 -286" fill="none" stroke="#07E2FE" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M 268 -134 A 300 300 0 0 1 268 134" fill="none" stroke="#07E2FE" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M 92 286 A 300 300 0 0 1 -52 296" fill="none" stroke="#07E2FE" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M -268 134 A 300 300 0 0 1 -268 -134" fill="none" stroke="#07E2FE" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round"/>
+
+    <!-- Tick marks on outer ring (60 ticks) -->
+    <g stroke="#07E2FE">
+      <line x1="0" y1="-296" x2="0" y2="-285" stroke-opacity="0.45" stroke-width="1.2"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(6)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(12)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(18)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(24)"/>
+      <line x1="0" y1="-296" x2="0" y2="-285" stroke-opacity="0.45" stroke-width="1.2" transform="rotate(30)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(36)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(42)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(48)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(54)"/>
+      <line x1="0" y1="-296" x2="0" y2="-285" stroke-opacity="0.45" stroke-width="1.2" transform="rotate(60)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(66)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(72)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(78)"/>
+      <line x1="0" y1="-296" x2="0" y2="-291" stroke-opacity="0.20" transform="rotate(84)"/>
+      <line x1="0" y1="-296" x2="0" y2="-285" stroke-opacity="0.45" stroke-width="1.2" transform="rotate(90)"/>
+    </g>
+
+    <!-- Mid ring (r=240) — dashed, counter-rotation -->
+    <circle r="240" fill="none" stroke="#07E2FE" stroke-opacity="0.40" stroke-width="1.2" stroke-dasharray="4 6"/>
+    <!-- Targeting brackets at cardinals -->
+    <g stroke="#07E2FE" stroke-opacity="0.55" stroke-width="1.6">
+      <g><line x1="-15" y1="-247" x2="15" y2="-247"/><line x1="-15" y1="-247" x2="-15" y2="-232"/><line x1="15" y1="-247" x2="15" y2="-232"/></g>
+      <g transform="rotate(90)"><line x1="-15" y1="-247" x2="15" y2="-247"/><line x1="-15" y1="-247" x2="-15" y2="-232"/><line x1="15" y1="-247" x2="15" y2="-232"/></g>
+      <g transform="rotate(180)"><line x1="-15" y1="-247" x2="15" y2="-247"/><line x1="-15" y1="-247" x2="-15" y2="-232"/><line x1="15" y1="-247" x2="15" y2="-232"/></g>
+      <g transform="rotate(270)"><line x1="-15" y1="-247" x2="15" y2="-247"/><line x1="-15" y1="-247" x2="-15" y2="-232"/><line x1="15" y1="-247" x2="15" y2="-232"/></g>
+    </g>
+    <!-- Active sector arc -->
+    <path d="M -170 -170 A 240 240 0 0 1 170 -170" fill="none" stroke="#07E2FE" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Inner ring (r=192) — fast CW -->
+    <circle r="192" fill="none" stroke="#07E2FE" stroke-opacity="0.55" stroke-width="1.4"/>
+    <path d="M -16 -191 A 192 192 0 0 1 110 -157" fill="none" stroke="#07E2FE" stroke-opacity="0.75" stroke-width="3" stroke-linecap="round"/>
+    <path d="M -91 169 A 192 192 0 0 1 -147 -123" fill="none" stroke="#07E2FE" stroke-opacity="0.75" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- SYS-XX labels (static) -->
+    <g font-size="9" fill="#07E2FE" fill-opacity="0.30" font-family="'JetBrains Mono', monospace" text-anchor="middle" letter-spacing="0.7">
+      <text x="0" y="-170" dy="3">SYS-00</text>
+      <text x="151" y="-85" dy="3">SYS-01</text>
+      <text x="151" y="92" dy="3">SYS-02</text>
+      <text x="0" y="178" dy="3">SYS-03</text>
+      <text x="-151" y="92" dy="3">SYS-04</text>
+      <text x="-151" y="-85" dy="3">SYS-05</text>
+    </g>
+
+    <!-- Static guideline ring (r=158) -->
+    <circle r="158" fill="none" stroke="#07E2FE" stroke-opacity="0.22" stroke-width="0.6" stroke-dasharray="1 4"/>
+
+    <!-- Cross-hair lines -->
+    <g stroke="#07E2FE" stroke-opacity="0.30" stroke-width="0.8">
+      <line x1="-142" y1="0" x2="-158" y2="0"/>
+      <line x1="142" y1="0" x2="158" y2="0"/>
+      <line x1="0" y1="-142" x2="0" y2="-158"/>
+      <line x1="0" y1="142" x2="0" y2="158"/>
+    </g>
+
+    <!-- Telemetry (corners) -->
+    <g font-size="10" fill="#07E2FE" fill-opacity="0.35" font-family="'JetBrains Mono', monospace" letter-spacing="0.5">
+      <text x="-262" y="-195">MODE :: LIST</text>
+      <text x="180" y="-195">C/01247</text>
+      <text x="-262" y="210">▲ 47.3 dB</text>
+      <text x="195" y="210">PWR 100%</text>
+    </g>
+
+    <!-- Audio orbit — 72 radial bars (decimated to 36 for SVG perf) -->
+    <g stroke="#07E2FE" stroke-opacity="0.55" stroke-linecap="round" stroke-width="1.6">
+      <line x1="0" y1="-158" x2="0" y2="-148"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(10)"/>
+      <line x1="0" y1="-158" x2="0" y2="-141" transform="rotate(20)"/>
+      <line x1="0" y1="-158" x2="0" y2="-149" transform="rotate(30)"/>
+      <line x1="0" y1="-158" x2="0" y2="-138" transform="rotate(40)"/>
+      <line x1="0" y1="-158" x2="0" y2="-145" transform="rotate(50)"/>
+      <line x1="0" y1="-158" x2="0" y2="-143" transform="rotate(60)"/>
+      <line x1="0" y1="-158" x2="0" y2="-150" transform="rotate(70)"/>
+      <line x1="0" y1="-158" x2="0" y2="-141" transform="rotate(80)"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(90)"/>
+      <line x1="0" y1="-158" x2="0" y2="-145" transform="rotate(100)"/>
+      <line x1="0" y1="-158" x2="0" y2="-140" transform="rotate(110)"/>
+      <line x1="0" y1="-158" x2="0" y2="-149" transform="rotate(120)"/>
+      <line x1="0" y1="-158" x2="0" y2="-144" transform="rotate(130)"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(140)"/>
+      <line x1="0" y1="-158" x2="0" y2="-142" transform="rotate(150)"/>
+      <line x1="0" y1="-158" x2="0" y2="-150" transform="rotate(160)"/>
+      <line x1="0" y1="-158" x2="0" y2="-145" transform="rotate(170)"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(180)"/>
+      <line x1="0" y1="-158" x2="0" y2="-140" transform="rotate(190)"/>
+      <line x1="0" y1="-158" x2="0" y2="-149" transform="rotate(200)"/>
+      <line x1="0" y1="-158" x2="0" y2="-141" transform="rotate(210)"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(220)"/>
+      <line x1="0" y1="-158" x2="0" y2="-145" transform="rotate(230)"/>
+      <line x1="0" y1="-158" x2="0" y2="-150" transform="rotate(240)"/>
+      <line x1="0" y1="-158" x2="0" y2="-142" transform="rotate(250)"/>
+      <line x1="0" y1="-158" x2="0" y2="-149" transform="rotate(260)"/>
+      <line x1="0" y1="-158" x2="0" y2="-144" transform="rotate(270)"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(280)"/>
+      <line x1="0" y1="-158" x2="0" y2="-141" transform="rotate(290)"/>
+      <line x1="0" y1="-158" x2="0" y2="-150" transform="rotate(300)"/>
+      <line x1="0" y1="-158" x2="0" y2="-143" transform="rotate(310)"/>
+      <line x1="0" y1="-158" x2="0" y2="-149" transform="rotate(320)"/>
+      <line x1="0" y1="-158" x2="0" y2="-145" transform="rotate(330)"/>
+      <line x1="0" y1="-158" x2="0" y2="-148" transform="rotate(340)"/>
+      <line x1="0" y1="-158" x2="0" y2="-142" transform="rotate(350)"/>
+    </g>
+
+    <!-- ═══ Arc Reactor center ════════════════════════════════════ -->
+    <g filter="url(#glow-focus)">
+      <circle r="135" fill="url(#reactor)" opacity="0.30"/>
+      <!-- Outer notched ring -->
+      <circle r="115" fill="none" stroke="#07E2FE" stroke-width="1.5" stroke-opacity="0.85"/>
+      <!-- Tick marks on outer reactor ring -->
+      <g stroke="#07E2FE" stroke-opacity="0.65" stroke-width="0.7">
+        <line x1="0" y1="-115" x2="0" y2="-108"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(30)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(60)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(90)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(120)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(150)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(180)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(210)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(240)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(270)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(300)"/>
+        <line x1="0" y1="-115" x2="0" y2="-108" transform="rotate(330)"/>
+      </g>
+
+      <!-- Six triangular rays -->
+      <g fill="url(#ray)" stroke="#07E2FE" stroke-opacity="0.95" stroke-width="1">
+        <polygon points="-13,-95 13,-95 6,-44 -6,-44"/>
+        <polygon points="-13,-95 13,-95 6,-44 -6,-44" transform="rotate(60)"/>
+        <polygon points="-13,-95 13,-95 6,-44 -6,-44" transform="rotate(120)"/>
+        <polygon points="-13,-95 13,-95 6,-44 -6,-44" transform="rotate(180)"/>
+        <polygon points="-13,-95 13,-95 6,-44 -6,-44" transform="rotate(240)"/>
+        <polygon points="-13,-95 13,-95 6,-44 -6,-44" transform="rotate(300)"/>
+      </g>
+
+      <!-- Inner ring -->
+      <circle r="46" fill="none" stroke="#07E2FE" stroke-width="1.2" stroke-opacity="0.7"/>
+      <circle r="40" fill="none" stroke="#07E2FE" stroke-width="0.7" stroke-opacity="0.4" stroke-dasharray="3 4"/>
+
+      <!-- Central hexagon -->
+      <circle r="32" fill="url(#reactor)"/>
+      <polygon points="0,-29 25.1,-14.5 25.1,14.5 0,29 -25.1,14.5 -25.1,-14.5"
+               fill="rgba(255,255,255,0.07)" stroke="#07E2FE" stroke-width="2" stroke-opacity="1"/>
+      <polygon points="0,-19 16.5,-9.5 16.5,9.5 0,19 -16.5,9.5 -16.5,-9.5"
+               fill="none" stroke="#07E2FE" stroke-width="1" stroke-opacity="0.85"/>
+      <circle r="6" fill="#07E2FE" fill-opacity="0.6"/>
+      <circle r="4" fill="#FFFFFF" fill-opacity="0.95"/>
+
+      <!-- Cardinals on inner ring -->
+      <g stroke="#07E2FE" stroke-width="2.5">
+        <line x1="-4" y1="-46" x2="4" y2="-46"/>
+        <line x1="-4" y1="-46" x2="4" y2="-46" transform="rotate(90)"/>
+        <line x1="-4" y1="-46" x2="4" y2="-46" transform="rotate(180)"/>
+        <line x1="-4" y1="-46" x2="4" y2="-46" transform="rotate(270)"/>
+      </g>
+
+      <!-- Three orbiting satellites -->
+      <g fill="#07E2FE">
+        <g transform="rotate(20)"><circle cx="0" cy="-72" r="2.3"/><circle cx="0" cy="-72" r="4.6" fill="none" stroke="#07E2FE" stroke-opacity="0.4" stroke-width="0.6"/></g>
+        <g transform="rotate(140)"><circle cx="0" cy="-72" r="2.3"/><circle cx="0" cy="-72" r="4.6" fill="none" stroke="#07E2FE" stroke-opacity="0.4" stroke-width="0.6"/></g>
+        <g transform="rotate(260)"><circle cx="0" cy="-72" r="2.3"/><circle cx="0" cy="-72" r="4.6" fill="none" stroke="#07E2FE" stroke-opacity="0.4" stroke-width="0.6"/></g>
+      </g>
+    </g>
+
+    <!-- Frame brackets at corners of HUD -->
+    <g stroke="#07E2FE" stroke-opacity="0.55" stroke-width="1.4">
+      <line x1="-280" y1="-280" x2="-258" y2="-280"/><line x1="-280" y1="-280" x2="-280" y2="-258"/>
+      <line x1="280" y1="-280" x2="258" y2="-280"/><line x1="280" y1="-280" x2="280" y2="-258"/>
+      <line x1="-280" y1="280" x2="-258" y2="280"/><line x1="-280" y1="280" x2="-280" y2="258"/>
+      <line x1="280" y1="280" x2="258" y2="280"/><line x1="280" y1="280" x2="280" y2="258"/>
+    </g>
+  </g>
+
+  <!-- ═══ Status panel (top-left) ═══════════════════════════════════ -->
+  <g transform="translate(40, 195)" font-family="'JetBrains Mono', monospace">
+    <rect width="290" height="240" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.35"/>
+    <line x1="20" y1="0" x2="270" y2="0" stroke="#07E2FE" stroke-opacity="0.45"/>
+    <!-- Corner cuts -->
+    <g stroke="#07E2FE" stroke-width="1">
+      <path d="M 0 14 L 0 0 L 14 0"/>
+      <path d="M 290 226 L 290 240 L 276 240"/>
+    </g>
+    <!-- Header -->
+    <text x="22" y="32" font-size="13" fill="#67e8f9" letter-spacing="5.2">SUBSISTEMAS</text>
+    <text x="270" y="32" font-size="11" fill="#07E2FE" fill-opacity="0.65" text-anchor="end" letter-spacing="3">P-01</text>
+
+    <!-- Subsystem rows -->
+    <g font-size="13" fill="#cffafe" fill-opacity="0.90" letter-spacing="1.3">
+      <g transform="translate(22, 64)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">01</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">VOICE BRIDGE</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">LIVE</text>
+      </g>
+      <g transform="translate(22, 88)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">02</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">LLM CORE</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">GPT-4o-MINI</text>
+      </g>
+      <g transform="translate(22, 112)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">03</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">STT · DEEPGRAM</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">ES-NOVA-3</text>
+      </g>
+      <g transform="translate(22, 136)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">04</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">TTS · ELEVEN</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">CRISTIAN</text>
+      </g>
+      <g transform="translate(22, 160)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">05</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">MICROPHONE</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">OPEN</text>
+      </g>
+      <g transform="translate(22, 184)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">06</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">MUSIC ENGINE</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">AC/DC LOAD</text>
+      </g>
+      <g transform="translate(22, 208)">
+        <text font-size="11" fill="#07E2FE" fill-opacity="0.55">07</text>
+        <circle cx="38" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="52" y="0">SAFETY LAYER</text>
+        <text x="245" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.7" text-anchor="end" letter-spacing="2.3">ACTIVE</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ═══ Quote panel (top-right) ═══════════════════════════════════ -->
+  <g transform="translate(1180, 195)" font-family="Inter, system-ui, sans-serif">
+    <rect width="380" height="240" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.35"/>
+    <line x1="20" y1="0" x2="360" y2="0" stroke="#07E2FE" stroke-opacity="0.45"/>
+    <g stroke="#07E2FE" stroke-width="1">
+      <path d="M 0 14 L 0 0 L 14 0"/>
+      <path d="M 380 226 L 380 240 L 366 240"/>
+    </g>
+
+    <text x="22" y="32" font-size="13" fill="#67e8f9" letter-spacing="5.2" font-family="'JetBrains Mono', monospace">FRASE DEL DÍA</text>
+    <text x="358" y="32" font-size="11" fill="#07E2FE" fill-opacity="0.65" text-anchor="end" letter-spacing="3" font-family="'JetBrains Mono', monospace">Q-DAY</text>
+
+    <!-- Big decorative quote -->
+    <text x="32" y="84" font-size="60" fill="#07E2FE" fill-opacity="0.30" font-family="'JetBrains Mono', monospace">&#8220;</text>
+
+    <text x="55" y="100" font-size="18" fill="#cffafe" font-style="italic" font-weight="300">No son las cosas las que perturban</text>
+    <text x="55" y="124" font-size="18" fill="#cffafe" font-style="italic" font-weight="300">al hombre, sino sus juicios sobre</text>
+    <text x="55" y="148" font-size="18" fill="#cffafe" font-style="italic" font-weight="300">ellas.</text>
+
+    <line x1="55" y1="180" x2="240" y2="180" stroke="#07E2FE" stroke-opacity="0.55"/>
+    <text x="358" y="184" font-size="12" fill="#cffafe" text-anchor="end" letter-spacing="4.2" font-family="'JetBrains Mono', monospace">EPICTETO</text>
+
+    <line x1="22" y1="210" x2="358" y2="210" stroke="#07E2FE" stroke-opacity="0.20"/>
+    <text x="22" y="228" font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.2" font-family="'JetBrains Mono', monospace">Q.04 / 09</text>
+    <text x="358" y="228" font-size="11" fill="#07E2FE" fill-opacity="0.65" text-anchor="end" letter-spacing="3.2" font-family="'JetBrains Mono', monospace">● AUTO 30s</text>
+  </g>
+
+  <!-- ═══ AI Engine panel (bottom-left) ═════════════════════════════ -->
+  <g transform="translate(40, 678)" font-family="'JetBrains Mono', monospace">
+    <rect width="290" height="220" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.35"/>
+    <line x1="20" y1="0" x2="270" y2="0" stroke="#07E2FE" stroke-opacity="0.45"/>
+    <g stroke="#07E2FE" stroke-width="1">
+      <path d="M 0 14 L 0 0 L 14 0"/>
+      <path d="M 290 206 L 290 220 L 276 220"/>
+    </g>
+
+    <text x="22" y="32" font-size="13" fill="#67e8f9" letter-spacing="5.2">AI ENGINE</text>
+    <text x="270" y="32" font-size="11" fill="#07E2FE" fill-opacity="0.65" text-anchor="end" letter-spacing="3">E-01</text>
+
+    <g font-size="12" fill="#cffafe" fill-opacity="0.75" letter-spacing="2.4">
+      <g transform="translate(22, 64)">
+        <circle cx="3" cy="-3" r="3" fill="#67e8f9" filter="url(#glow-soft)"/>
+        <text x="20" y="0">MODEL</text>
+        <text x="270" y="0" font-size="13" fill="#cffafe" text-anchor="end" letter-spacing="0.4">gpt-4o-mini</text>
+      </g>
+      <g transform="translate(22, 92)">
+        <circle cx="3" cy="-3" r="3" fill="#67e8f9" fill-opacity="0.6" filter="url(#glow-soft)"/>
+        <text x="20" y="0">TOKENS</text>
+        <text x="270" y="0" font-size="13" fill="#cffafe" text-anchor="end" letter-spacing="0.4">12.4k / 8.7k</text>
+      </g>
+      <g transform="translate(22, 120)">
+        <circle cx="3" cy="-3" r="3" fill="#67e8f9" fill-opacity="0.6" filter="url(#glow-soft)"/>
+        <text x="20" y="0">COST</text>
+        <text x="270" y="0" font-size="13" fill="#cffafe" text-anchor="end" letter-spacing="0.4">$0.04 today</text>
+      </g>
+      <g transform="translate(22, 148)">
+        <circle cx="3" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="20" y="0">LATENCY</text>
+        <text x="270" y="0" font-size="13" fill="#cffafe" text-anchor="end" letter-spacing="0.4">247ms avg</text>
+      </g>
+      <g transform="translate(22, 176)">
+        <circle cx="3" cy="-3" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="20" y="0">HERMES</text>
+        <text x="270" y="0" font-size="13" fill="#cffafe" text-anchor="end" letter-spacing="0.4">89 skills · ready</text>
+      </g>
+    </g>
+    <line x1="22" y1="195" x2="270" y2="195" stroke="#07E2FE" stroke-opacity="0.20"/>
+    <text x="22" y="213" font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.2">REQ 0042</text>
+    <g transform="translate(220, 209)"><circle cx="0" cy="0" r="3" fill="#22C55E" filter="url(#glow-soft)"/><text x="10" y="4" font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.2">OPERATIONAL</text></g>
+  </g>
+
+  <!-- ═══ Build Activity panel (bottom-right) ═══════════════════════ -->
+  <g transform="translate(1180, 678)" font-family="'JetBrains Mono', monospace">
+    <rect width="380" height="220" fill="#0E1E21" stroke="#07E2FE" stroke-opacity="0.35"/>
+    <line x1="20" y1="0" x2="360" y2="0" stroke="#07E2FE" stroke-opacity="0.45"/>
+    <g stroke="#07E2FE" stroke-width="1">
+      <path d="M 0 14 L 0 0 L 14 0"/>
+      <path d="M 380 206 L 380 220 L 366 220"/>
+    </g>
+
+    <text x="22" y="32" font-size="13" fill="#67e8f9" letter-spacing="5.2">ACTIVE BUILDS</text>
+    <text x="358" y="32" font-size="11" fill="#07E2FE" fill-opacity="0.65" text-anchor="end" letter-spacing="3">B-01</text>
+
+    <!-- Build rows -->
+    <g font-size="13" letter-spacing="0.4">
+      <g transform="translate(22, 60)">
+        <circle cx="3" cy="-4" r="3" fill="#FFB800" filter="url(#glow-soft)"/>
+        <text x="20" y="0" fill="#cffafe">ecomdrop_connector</text>
+        <text x="358" y="0" font-size="12" fill="#FBBF24" fill-opacity="0.85" text-anchor="end" letter-spacing="2.3">⚡ DEPLOYING</text>
+        <rect x="26" y="8" width="240" height="3" rx="1.5" fill="#0a1a23" stroke="none"/>
+        <rect x="26" y="8" width="172" height="3" rx="1.5" fill="#FFB800" filter="url(#glow-soft)"/>
+        <text x="358" y="14" font-size="11" fill="#67e8f9" fill-opacity="0.75" text-anchor="end">72%</text>
+      </g>
+      <g transform="translate(22, 92)">
+        <circle cx="3" cy="-4" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="20" y="0" fill="#cffafe">yarbis-asistente</text>
+        <text x="358" y="0" font-size="12" fill="#22C55E" fill-opacity="0.85" text-anchor="end" letter-spacing="2.3">✓ LIVE</text>
+        <text x="26" y="14" font-size="11" fill="#07E2FE" fill-opacity="0.55">2 min ago</text>
+      </g>
+      <g transform="translate(22, 124)">
+        <circle cx="3" cy="-4" r="3" fill="#67e8f9" filter="url(#glow-soft)"/>
+        <text x="20" y="0" fill="#cffafe">remotion-studio</text>
+        <text x="358" y="0" font-size="12" fill="#67e8f9" fill-opacity="0.85" text-anchor="end" letter-spacing="2.3">◐ BUILDING</text>
+        <rect x="26" y="8" width="240" height="3" rx="1.5" fill="#0a1a23" stroke="none"/>
+        <rect x="26" y="8" width="108" height="3" rx="1.5" fill="#67e8f9" filter="url(#glow-soft)"/>
+        <text x="358" y="14" font-size="11" fill="#67e8f9" fill-opacity="0.75" text-anchor="end">45%</text>
+      </g>
+      <g transform="translate(22, 156)">
+        <circle cx="3" cy="-4" r="3" fill="#22C55E" filter="url(#glow-soft)"/>
+        <text x="20" y="0" fill="#cffafe">mission-control</text>
+        <text x="358" y="0" font-size="12" fill="#22C55E" fill-opacity="0.85" text-anchor="end" letter-spacing="2.3">✓ LIVE</text>
+        <text x="26" y="14" font-size="11" fill="#07E2FE" fill-opacity="0.55">8 min ago</text>
+      </g>
+      <g transform="translate(22, 188)">
+        <circle cx="3" cy="-4" r="3" fill="#07E2FE" fill-opacity="0.4"/>
+        <text x="20" y="0" fill="#cffafe" fill-opacity="0.55">contenido-marca</text>
+        <text x="358" y="0" font-size="12" fill="#07E2FE" fill-opacity="0.4" text-anchor="end" letter-spacing="2.3">— IDLE</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ═══ Footer ════════════════════════════════════════════════════ -->
+  <g transform="translate(40, 945)" font-family="'JetBrains Mono', monospace">
+    <circle cx="6" cy="-3" r="3" fill="#07E2FE" filter="url(#glow-soft)"/>
+    <text x="20" y="0" font-size="11" fill="#07E2FE" fill-opacity="0.75" letter-spacing="3.5">AUDIO STREAM ACTIVE</text>
+    <line x1="220" y1="-2" x2="280" y2="-2" stroke="#07E2FE" stroke-opacity="0.30"/>
+  </g>
+
+  <g transform="translate(1560, 945)" font-family="'JetBrains Mono', monospace" text-anchor="end" font-size="13" fill="#cffafe">
+    <g transform="translate(-540, 0)">
+      <text font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.5" y="-15">ROOM</text>
+      <text>YARBIS-LAB</text>
+    </g>
+    <g transform="translate(-380, 0)">
+      <text font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.5" y="-15">STREAM</text>
+      <text>48kHz · STEREO</text>
+    </g>
+    <g transform="translate(-200, 0)">
+      <text font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.5" y="-15">CODEC</text>
+      <text>OPUS · 64kbps</text>
+    </g>
+    <g transform="translate(-80, 0)">
+      <text font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.5" y="-15">LATENCIA</text>
+      <text>&lt; 2.0 s</text>
+    </g>
+    <g>
+      <text font-size="11" fill="#07E2FE" fill-opacity="0.65" letter-spacing="3.5" y="-15">UPTIME</text>
+      <text>00:04:26</text>
+    </g>
+  </g>
+
+  <!-- Blueprint marks at corners (small text) -->
+  <g font-family="'JetBrains Mono', monospace" font-size="9" fill="#07E2FE" fill-opacity="0.20" letter-spacing="3">
+    <text x="16" y="120">◇ WORKSTATION.ELKIN</text>
+    <text x="16" y="135">BUILD.2026-05-05</text>
+    <text x="1584" y="120" text-anchor="end">SPEC / MAC.MINI</text>
+    <text x="1584" y="135" text-anchor="end">STACK.AI/FULL</text>
+    <text x="16" y="880">// ENGINEERED BY</text>
+    <text x="16" y="895" fill="#67e8f9" fill-opacity="0.5">ELKIN.GARCIA</text>
+    <text x="1584" y="880" text-anchor="end">ECOMDROP IA · 2026</text>
+    <text x="1584" y="895" text-anchor="end">PROJECT.YARBIS</text>
+  </g>
+</svg>
