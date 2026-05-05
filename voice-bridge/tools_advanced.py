@@ -24,6 +24,12 @@ from typing import Optional
 import httpx
 from livekit.agents import function_tool
 
+from agent_reports import (
+    build_daily_briefing,
+    list_manual_reports,
+    read_manual_report,
+    write_manual_report,
+)
 from tools import _send_electron_command
 
 logger = logging.getLogger("yarbis-tools-adv")
@@ -271,6 +277,86 @@ async def current_time() -> str:
     )
 
 
+# ═══ 3c. AGENT REPORTS (cross-agent intelligence) ═════════════════════════
+
+
+@function_tool()
+async def daily_briefing(days: int = 1) -> str:
+    """Briefing del día con la actividad de TODOS los agentes y proyectos. \
+Combina commits de git, proyectos activos en Claude Code, sesiones recientes \
+de Hermes, y reportes manuales que otros agentes hayan dejado en \
+~/.yarbis/reports/. Llama cuando Elkin diga 'dame el briefing', 'qué pasó \
+hoy', 'novedades de mis agentes', 'qué hicieron mis bots', 'resumen del día'. \
+Parámetro `days`: cuántos días atrás mirar (default 1 = hoy)."""
+    days = max(1, min(7, int(days)))
+    briefing = build_daily_briefing(days=days)
+    if not briefing or briefing.startswith("No encontré"):
+        return briefing
+    period = "hoy" if days == 1 else f"los últimos {days} días"
+    return f"Aquí va el briefing de {period}:\n\n{briefing}"
+
+
+@function_tool()
+async def list_reports(days: int = 1) -> str:
+    """Lista los reportes que otros agentes han dejado para ti en los últimos \
+N días. Solo metadata (agente, proyecto, prioridad) — para leer el contenido \
+completo de uno, usa `read_report` con el nombre. Llama cuando Elkin diga \
+'qué reportes tengo', 'qué me dejaron mis agentes', 'lista de novedades', \
+'updates pendientes'."""
+    days = max(1, min(14, int(days)))
+    reports = list_manual_reports(days=days)
+    if not reports:
+        return f"No hay reportes manuales de los últimos {days} días."
+
+    high = [r for r in reports if r["priority"] in ("high", "urgent")]
+    lines = [f"Tienes {len(reports)} reporte(s) en los últimos {days} días."]
+    if high:
+        lines.append(f"De los cuales {len(high)} son de prioridad alta:")
+        for r in high:
+            lines.append(f"  · {r['agent']} sobre {r['project']}: {r['summary'][:100]}")
+        lines.append("\nResto:")
+    for r in (reports if not high else [r for r in reports if r not in high])[:8]:
+        lines.append(f"  · {r['agent']} sobre {r['project']}: {r['summary'][:80]}")
+    return "\n".join(lines)
+
+
+@function_tool()
+async def read_report(filename: str) -> str:
+    """Lee el contenido completo de un reporte específico de agente. Usa \
+`list_reports` primero para obtener el nombre del archivo. Llama cuando \
+Elkin diga 'léeme el reporte de X', 'qué dice el reporte sobre Y'."""
+    content = read_manual_report(filename)
+    if not content:
+        return f"No encontré el reporte '{filename}'. Usa list_reports para ver los disponibles."
+    if len(content) > 1500:
+        content = content[:1500] + "\n... (recortado, archivo más largo)"
+    return content
+
+
+@function_tool()
+async def save_report(
+    title: str,
+    body: str,
+    project: str = "general",
+    priority: str = "normal",
+) -> str:
+    """Guarda una nota o reporte como YARBIS. Útil cuando Elkin pide \
+'recuérdame que…', 'apunta esto…', 'guarda nota: …', 'apúntale a Elkin que…'. \
+El reporte queda en ~/.yarbis/reports/ y se puede consultar después con \
+list_reports / read_report. Parámetros: title (corto, descriptivo), body \
+(el contenido), project (qué proyecto, default 'general'), priority \
+('normal' o 'high' si es urgente)."""
+    path = write_manual_report(
+        agent="yarbis-voice",
+        title=title,
+        body=body,
+        project=project,
+        report_type="note",
+        priority=priority,
+    )
+    return f"Nota guardada como {os.path.basename(path)}."
+
+
 # ═══ 4. HERMES DELEGATION (the master tool) ═══════════════════════════════
 
 
@@ -334,5 +420,9 @@ ADVANCED_TOOLS = [
     take_screenshot,
     set_system_volume,
     current_time,
+    daily_briefing,
+    list_reports,
+    read_report,
+    save_report,
     ask_hermes,
 ]

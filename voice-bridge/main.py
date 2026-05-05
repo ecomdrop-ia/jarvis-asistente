@@ -133,6 +133,15 @@ Control de ventana:
 "modo cinema", "pantalla completa", "fullscreen" → `cinema_mode`
 "sal de pantalla completa", "modo ventana" → `exit_cinema_mode`
 
+Reportes y briefings entre agentes:
+"dame el briefing", "qué pasó hoy", "novedades de mis agentes",
+"qué hicieron mis bots hoy", "resumen del día" → `daily_briefing`
+"qué reportes tengo", "qué me dejaron mis agentes", "updates pendientes",
+"lista de novedades" → `list_reports`
+"léeme el reporte de X" → `read_report`
+"recuérdame que…", "apunta esto", "guarda nota" → `save_report`
+   (úsalo para que Elkin pueda recordar cosas después; mantenlo breve)
+
 ═══ DELEGACIÓN A HERMES (regla maestra) ═══
 
 Para CUALQUIER tarea que requiera datos externos persistentes —emails, \
