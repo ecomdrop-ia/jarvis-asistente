@@ -1,0 +1,82 @@
+# ─── Secrets (NEVER commit these) ──────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Hermes config (contains API keys + personal context)
+.hermes/
+
+# ─── Node / pnpm ───────────────────────────────────────────────────────
+node_modules/
+.pnpm-store/
+pnpm-debug.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# ─── Next.js ───────────────────────────────────────────────────────────
+.next/
+out/
+.turbo/
+next-env.d.ts
+
+# ─── Electron build output ─────────────────────────────────────────────
+electron/dist/
+electron/out/
+electron/release/
+
+# ─── Python ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# ─── Audio assets (large, downloaded via yt-dlp) ───────────────────────
+voice-bridge/assets/*.mp3
+voice-bridge/assets/*.wav
+voice-bridge/assets/*.webm
+!voice-bridge/assets/.gitkeep
+
+# ─── Logs ──────────────────────────────────────────────────────────────
+*.log
+logs/
+.next/logs/
+
+# ─── OS ────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+
+# ─── Editors ───────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# ─── PRD docs (private) ────────────────────────────────────────────────
+*.docx
+
+# ─── Test coverage ─────────────────────────────────────────────────────
+coverage/
+.coverage
+htmlcov/
+
+# ─── LiveKit data ──────────────────────────────────────────────────────
+livekit-data/
+recordings/

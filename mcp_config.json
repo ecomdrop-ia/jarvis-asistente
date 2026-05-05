@@ -1,0 +1,54 @@
+{
+  "servers": {
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/gmail-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}"
+      }
+    },
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/google-calendar-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}"
+      }
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/notion-mcp"],
+      "env": {
+        "NOTION_API_KEY": "${NOTION_API_KEY}"
+      }
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_KEY": "${SUPABASE_SERVICE_KEY}"
+      }
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/brave-search-mcp"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      }
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/google-drive-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/filesystem-mcp", "/Users/ecomdropsolutions/projects/ecomdrop"]
+    }
+  }
+}

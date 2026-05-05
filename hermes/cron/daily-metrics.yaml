@@ -1,0 +1,19 @@
+# YARBIS Cron: Daily Ecomdrop Metrics Report
+# Runs every morning at 8:30 AM Colombia time (UTC-5)
+
+name: daily-ecomdrop-metrics
+schedule: "30 8 * * *"
+timezone: America/Bogota
+deliver_to: telegram  # Also available: discord, slack, cli
+
+prompt: |
+  Generate the daily Ecomdrop metrics report. Use supabase MCP to query:
+  1. Total orders yesterday and today so far
+  2. Revenue yesterday vs same day last week
+  3. Top 3 products by units sold
+  4. Any products with stock below minimum threshold
+  5. Any failed webhooks or error logs
+
+  Format as a brief morning briefing. Include percentage comparisons.
+  If stock is critically low on any product, mark it as URGENT.
+  Keep it under 10 lines. Elkin reads this on Telegram while having coffee.

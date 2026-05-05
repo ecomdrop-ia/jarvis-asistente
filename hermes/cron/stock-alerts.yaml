@@ -1,0 +1,19 @@
+# YARBIS Cron: Stock Level Alerts
+# Runs every 4 hours during business hours
+
+name: stock-alerts
+schedule: "0 8,12,16,20 * * *"
+timezone: America/Bogota
+deliver_to: telegram
+
+prompt: |
+  Check Ecomdrop stock levels using supabase MCP.
+  Query products where current stock is below minimum threshold.
+
+  ONLY send alert if there are products below minimum.
+  If all stock is healthy, do NOT send any message (silent success).
+
+  If alert needed, format as:
+  "⚠️ Stock bajo en [N] productos:
+  - [Product]: [current]/[minimum] unidades
+  Quieres que avise al proveedor?"

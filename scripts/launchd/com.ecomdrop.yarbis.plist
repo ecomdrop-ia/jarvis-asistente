@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  YARBIS auto-launch on user login.
+
+  Install:
+    cp scripts/launchd/com.ecomdrop.yarbis.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.ecomdrop.yarbis.plist
+
+  Uninstall:
+    launchctl unload ~/Library/LaunchAgents/com.ecomdrop.yarbis.plist
+    rm ~/Library/LaunchAgents/com.ecomdrop.yarbis.plist
+
+  Logs:
+    tail -f ~/Library/Logs/yarbis/launchd.{out,err}.log
+    tail -f ~/Library/Logs/yarbis/{livekit,voice-bridge,ui,electron}.log
+
+  Note: if you move the project, edit the WorkingDirectory and ProgramArguments
+  paths below.  ~ is not expanded by launchd — use absolute paths.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ecomdrop.yarbis</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/ecomdropsolutions/projects/ecomdrop/yarbis-asistente/scripts/start_yarbis.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/ecomdropsolutions/projects/ecomdrop/yarbis-asistente</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+
+    <key>ProcessType</key>
+    <string>Interactive</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/ecomdropsolutions/Library/Logs/yarbis/launchd.out.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/ecomdropsolutions/Library/Logs/yarbis/launchd.err.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/ecomdropsolutions/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>/Users/ecomdropsolutions</string>
+    </dict>
+</dict>
+</plist>

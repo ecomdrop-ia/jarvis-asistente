@@ -1,0 +1,17 @@
+# YARBIS Cron: Email Digest
+# Runs twice daily: 9 AM and 3 PM Colombia time
+
+name: email-digest
+schedule: "0 9,15 * * *"
+timezone: America/Bogota
+deliver_to: telegram
+
+prompt: |
+  Check Gmail for unread emails since last digest. Use gmail MCP to:
+  1. Search for unread emails
+  2. Categorize by priority: urgent (Shopify, clients, payments), normal, low
+  3. Summarize each urgent email in 1 line
+  4. Count normal and low priority
+
+  Format as: "[N] emails nuevos. [X] urgentes:" followed by 1-line summaries.
+  If no urgent emails, just say "Inbox tranquilo. [N] emails normales."

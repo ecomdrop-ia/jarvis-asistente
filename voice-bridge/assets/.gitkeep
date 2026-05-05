@@ -1,0 +1,3 @@
+# This folder holds audio assets (welcome music) downloaded by the user
+# via yt-dlp. The mp3/wav/webm files are gitignored — see .gitignore.
+# This .gitkeep file ensures the directory exists in the repo.

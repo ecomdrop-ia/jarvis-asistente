@@ -1,0 +1,14 @@
+{
+  "name": "yarbis-electron",
+  "version": "0.1.0",
+  "description": "Electron wrapper for the YARBIS HUD UI — auto-grants mic permission and bypasses browser autoplay restrictions so YARBIS can speak the moment it loads.",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start:dev": "YARBIS_DEV=1 electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}
