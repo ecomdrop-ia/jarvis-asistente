@@ -6,7 +6,7 @@
 
 ### Your AI Real-time Builder Intelligence System
 
-**Un asistente de voz tipo JARVIS, open source, para builders de IAA.**
+**Un asistente de voz tipo JARVIS, open source, para builders de IA.**
 Voz en tiempo real. HUD personalizado. Siempre escuchando. 100% local.
 
 ![status](https://img.shields.io/badge/status-active-22C55E?style=flat-square)
